@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/NickHoulding/FlashForge#readme",
   "dependencies": {
-    "lite-server": "^2.6.1"
+    "chromadb": "^3.0.10",
+    "lite-server": "^2.6.1",
+    "ollama": "^0.5.16"
   }
 }
