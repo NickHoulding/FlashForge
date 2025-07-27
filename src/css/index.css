@@ -1,0 +1,44 @@
+@import url('./satoshi.css');
+
+* {
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+:root {
+  font-family: 'Satoshi-Regular', Helvetica, Arial, sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--neutral);
+  color-scheme: light dark;
+
+  /* Dark mode */
+  --dark-primary: #E5E5E5;
+  --dark-secondary: #4D4D4D;
+  --dark-accent: #333333;
+  --dark-neutral: #0A0A0A;
+
+  /* Light mode */
+  --light-primary: #2E2E2E;
+  --light-secondary: #5A5A5A;
+  --light-accent: #8A8A8A;
+  --light-neutral: #f6f6f6;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary: var(--dark-primary);
+    --secondary: var(--dark-secondary);
+    --accent: var(--dark-accent);
+    --neutral: var(--dark-neutral);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --primary: var(--light-primary);
+    --secondary: var(--light-secondary);
+    --accent: var(--light-accent);
+    --neutral: var(--light-neutral);
+  }
+}

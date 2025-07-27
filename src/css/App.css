@@ -1,22 +1,13 @@
-@font-face {
-  font-family: 'Satoshi-Regular';
-  src: url('../fonts/Satoshi-Regular.woff2') format('woff2'),
-       url('../fonts/Satoshi-Regular.woff') format('woff'),
-       url('../fonts/Satoshi-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-display: swap;
-  font-style: normal;
-}
+@import url('./satoshi.css');
 
 header {
-  font-family: 'Satoshi-Regular', sans-serif;
+  font-family: 'Satoshi-Bold';
   font-size: 1.1rem;
-  font-weight: bold;
   display: flex;
   justify-content: space-between;
   vertical-align: middle;
   padding: 0 10px;
-  border-bottom: 2px solid grey;
+  border-bottom: 2px solid var(--accent);
 }
 
 header p {
@@ -32,23 +23,26 @@ nav ul {
 
 nav ul li {
   padding-left: 50px;
-  transition: font-weight 0.6s ease;
+  color: var(--primary);
 }
 
 header button {
   display: flex;
   border: none;
   height: min-content;
-  color: white;
+  color: var(--primary);
   background-color: transparent;
   padding: 5px;
   margin-top: auto;
   margin-bottom: auto;
   border-radius: 5px;
-  transition: background-color 0.2s ease;
 }
 
 header button:hover {
-  background-color: darkgray;
+  background-color: var(--accent);
   cursor: pointer;
+}
+
+header button svg {
+  width: 30px
 }
