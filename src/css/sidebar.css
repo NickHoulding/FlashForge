@@ -9,7 +9,7 @@
     color: var(--primary);
     background-color: var(--neutral);
     border-right: 2px solid var(--accent);
-    transition: width 0.25s ease, background-color 0.25s ease;
+    transition: width 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .sidebar.open {
@@ -22,7 +22,7 @@
     background-color: var(--neutral);
 }
 
-.controls {
+.top-controls {
   height: min-content;
   width: auto;
   background-color: transparent;
@@ -30,29 +30,38 @@
   justify-content: right;
 }
 
-.toggle-sidebar {
-  display: flex;
-  border: none;
+.bottom-controls {
   height: min-content;
+  width: auto;
+  background-color: transparent;
+  display: flex;
+  justify-content: right;
+}
+
+button {
+  width: 40px;
+  height: min-content;
+  display: flex;
+  vertical-align: middle;
+  border: none;
   color: var(--primary);
   background-color: transparent;
   padding: 5px;
-  margin-bottom: auto;
   border-radius: 5px;
 }
 
-.toggle-sidebar:hover {
+button svg {
+  width: 40px
+}
+
+button:hover {
   background-color: var(--accent);
   cursor: pointer;
 }
 
-.sidebar.open .toggle-sidebar:hover {
+.sidebar.open button:hover {
   background-color: var(--neutral);
   cursor: pointer;
-}
-
-.toggle-sidebar svg {
-  width: 30px
 }
 
 #chats {
