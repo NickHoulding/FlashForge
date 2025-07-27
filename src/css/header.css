@@ -1,5 +1,3 @@
-@import url('./satoshi.css');
-
 header {
   font-family: 'Satoshi-Bold';
   font-size: 1.1rem;
@@ -26,7 +24,7 @@ nav ul li {
   color: var(--primary);
 }
 
-header button {
+#sidebar-button {
   display: flex;
   border: none;
   height: min-content;
@@ -38,11 +36,11 @@ header button {
   border-radius: 5px;
 }
 
-header button:hover {
+#sidebar-button:hover {
   background-color: var(--accent);
   cursor: pointer;
 }
 
-header button svg {
+#sidebar-button svg {
   width: 30px
 }

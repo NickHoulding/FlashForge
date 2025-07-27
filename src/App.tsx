@@ -1,9 +1,14 @@
 import { Header } from './components/Header'
-import './css/App.css'
+import { Sidebar } from './components/Sidebar'
+import './css/app.css'
+import './css/sidebar.css'
 
 function App() {
   return (
-    <Header />
+    <main>
+      <Sidebar />
+      <Header />
+    </main>
   )
 }
 

@@ -1,0 +1,16 @@
+#sidebar {
+    display: flex;
+    position:absolute;
+    box-sizing: border-box;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100%;
+    padding: 10px;
+    background-color: var(--accent);
+}
+
+
+#chats {
+    flex: 1;
+}
