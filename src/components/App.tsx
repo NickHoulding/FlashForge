@@ -14,7 +14,10 @@ function App() {
   return (
     <main>
       <Sidebar isOpen={isOpen} onToggleSidebar={toggleSidebar} />
-      <Header />
+      <div className='content'>
+        <Header />
+        <div className='chat'></div>
+      </div>
     </main>
   )
 }
