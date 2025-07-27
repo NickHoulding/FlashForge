@@ -1,16 +1,50 @@
-#sidebar {
+.sidebar {
     display: flex;
-    position:absolute;
+    flex-direction: column;
+    gap: 10px;
+    position: absolute;
     box-sizing: border-box;
     top: 0;
     left: 0;
     width: 250px;
     height: 100%;
     padding: 10px;
+    color: var(--primary);
     background-color: var(--accent);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
 }
 
+.sidebar.open {
+    transform: translateX(0);
+}
+
+.sidebar.close {
+    transform: translateX(-100%);
+}
+
+.close-sidebar {
+  display: flex;
+  border: none;
+  height: min-content;
+  color: var(--primary);
+  background-color: transparent;
+  padding: 5px;
+  margin-right: auto;
+  margin-bottom: auto;
+  border-radius: 5px;
+}
+
+.close-sidebar:hover {
+  background-color: var(--neutral);
+  cursor: pointer;
+}
+
+.close-sidebar svg {
+  width: 30px
+}
 
 #chats {
     flex: 1;
+    background-color: red;
 }

@@ -24,7 +24,7 @@ nav ul li {
   color: var(--primary);
 }
 
-#sidebar-button {
+.open-sidebar {
   display: flex;
   border: none;
   height: min-content;
@@ -36,11 +36,11 @@ nav ul li {
   border-radius: 5px;
 }
 
-#sidebar-button:hover {
+.open-sidebar:hover {
   background-color: var(--accent);
   cursor: pointer;
 }
 
-#sidebar-button svg {
+.open-sidebar svg {
   width: 30px
 }
