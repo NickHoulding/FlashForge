@@ -1,46 +1,38 @@
 header {
-  font-family: 'Satoshi-Bold';
-  font-size: 1.1rem;
   display: flex;
   justify-content: space-between;
   vertical-align: middle;
   padding: 0 10px;
-  border-bottom: 2px solid var(--accent);
+  padding-right: 20px;
 }
 
-header p {
-  font-weight: bold;
-  font-size: 1.25rem;
+#logo {
+  font-family: 'Satoshi-Bold';
+  font-size: 1.2rem;
+  line-height: 1;
+  margin-left: 70px;
+  padding: 0;
+  transition: margin-left 0.25s ease;
+}
+
+body:has(.sidebar.open) #logo {
+  margin-left: 260px;
+}
+
+nav {
+  display: flex;
+  margin-left: auto;
+  vertical-align: middle;
 }
 
 nav ul {
+  font-family: 'Satoshi-Medium';
   display: flex;
-  list-style: none;
   align-items: center;
+  gap: 50px;
+  list-style: none;
 }
 
 nav ul li {
-  padding-left: 50px;
   color: var(--primary);
-}
-
-.open-sidebar {
-  display: flex;
-  border: none;
-  height: min-content;
-  color: var(--primary);
-  background-color: transparent;
-  padding: 5px;
-  margin-top: auto;
-  margin-bottom: auto;
-  border-radius: 5px;
-}
-
-.open-sidebar:hover {
-  background-color: var(--accent);
-  cursor: pointer;
-}
-
-.open-sidebar svg {
-  width: 30px
 }

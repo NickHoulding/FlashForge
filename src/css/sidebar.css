@@ -10,41 +10,55 @@
     height: 100%;
     padding: 10px;
     color: var(--primary);
-    background-color: var(--accent);
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
+    background-color: var(--neutral);
+    border-right: 2px solid var(--accent);
+    transform: translateX(-75%);
+    transition: transform 0.25s ease, background-color 0.25s ease;
 }
 
 .sidebar.open {
     transform: translateX(0);
+    background-color: var(--accent);
 }
 
-.sidebar.close {
-    transform: translateX(-100%);
+.sidebar.closed {
+    transform: translateX(-75%);
+    background-color: var(--neutral);
 }
 
-.close-sidebar {
+.controls {
+  height: min-content;
+  width: auto;
+  background-color: transparent;
+  display: flex;
+  justify-content: right;
+}
+
+.toggle-sidebar {
   display: flex;
   border: none;
   height: min-content;
   color: var(--primary);
   background-color: transparent;
   padding: 5px;
-  margin-right: auto;
   margin-bottom: auto;
   border-radius: 5px;
 }
 
-.close-sidebar:hover {
+.toggle-sidebar:hover {
+  background-color: var(--accent);
+  cursor: pointer;
+}
+
+.sidebar.open .toggle-sidebar:hover {
   background-color: var(--neutral);
   cursor: pointer;
 }
 
-.close-sidebar svg {
+.toggle-sidebar svg {
   width: 30px
 }
 
 #chats {
     flex: 1;
-    background-color: red;
 }
