@@ -2,6 +2,7 @@ import { Sidebar } from './Sidebar'
 import { Header } from './Header'
 import { UserQuery } from './UserQuery';
 import { AIResponse } from './AIResponse';
+import { ChatBox } from './ChatBox';
 import { useState, useEffect } from "react";
 import '../css/sidebar.css'
 import '../css/app.css'
@@ -27,8 +28,13 @@ function App() {
       <Sidebar isOpen={isOpen} onToggleSidebar={toggleSidebar} onToggleTheme={toggleTheme} />
       <div className='content'>
         <Header />
-        <div className='chat'>
-          <UserQuery />
+        <div className='chat-root'>
+          <div className='chat'>
+            <UserQuery />
+            <AIResponse />
+            <AIResponse />
+          </div>
+          <ChatBox />
         </div>
       </div>
     </main>

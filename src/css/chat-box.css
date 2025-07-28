@@ -1,0 +1,87 @@
+.chat-root {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 0 20px 20px 20px;
+}
+
+.chat {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  flex: 1;
+  width: min(750px, 100%);
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.chat-box {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: min(750px, 100%);
+    min-height: 100px;
+    margin: 0 auto;
+    padding: 10px;
+    padding-top: 0;
+    box-sizing: border-box;
+    background-color: var(--accent);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.chat-box textarea {
+    flex: 1;
+    min-height: 75px;
+    padding: 0;
+    padding-top: 10px;
+    background-color: transparent;
+    color: var(--primary);
+    font-family: 'Satoshi-Regular';
+    font-size: 1rem;
+    text-wrap: wrap;
+    box-sizing: border-box;
+    border-radius: 10px 10px 0 0;
+    border: none;
+    resize: none;
+}
+
+.chat-box textarea:focus {
+    outline: none;
+}
+
+.chat-box-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.chat-box-buttons button {
+    display: flex;
+    align-items: center;
+    vertical-align: middle;
+    width: 35px;
+    height: 35px;
+    border: 2px solid var(--secondary);
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+.send-button {
+    background-color: var(--secondary);
+    color: var(--primary);
+}
+
+.send-button:hover {
+    background-color: var(--primary);
+    color: var(--neutral);
+}
+
+.file-button {
+    background-color: transparent;
+    color: var(--primary);
+}
+
+.file-button:hover {
+    background-color: var(--secondary);
+    color: var(--neutral);
+}

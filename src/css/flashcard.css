@@ -5,7 +5,7 @@
     gap: 10px;
     background-color: var(--accent);
     padding: 10px;
-    border-radius: 15px;
+    border-radius: 20px;
 }
 
 .flashcard-root textarea {
@@ -16,7 +16,7 @@
     background-color: var(--neutral);
     color: var(--primary);
     padding: 10px;
-    border-radius: 5px;
+    border-radius: 10px;
     resize: none;
 }
 
