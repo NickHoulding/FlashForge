@@ -41,3 +41,11 @@ nav ul {
 nav ul li {
   color: var(--primary);
 }
+
+.chat {
+  flex: 1;
+  width: min(750px, 100%);
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
