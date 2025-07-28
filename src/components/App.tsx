@@ -1,5 +1,6 @@
 import { Sidebar } from './Sidebar'
 import { Header } from './Header'
+import { AIResponse } from './AIResponse';
 import { useState, useEffect } from "react";
 import '../css/sidebar.css'
 import '../css/app.css'
@@ -25,7 +26,9 @@ function App() {
       <Sidebar isOpen={isOpen} onToggleSidebar={toggleSidebar} onToggleTheme={toggleTheme} />
       <div className='content'>
         <Header />
-        <div className='chat'></div>
+        <div className='chat'>
+          <AIResponse />
+        </div>
       </div>
     </main>
   )
