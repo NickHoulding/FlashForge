@@ -43,6 +43,9 @@ nav ul li {
 }
 
 .chat {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
   flex: 1;
   width: min(750px, 100%);
   margin: 0 auto;

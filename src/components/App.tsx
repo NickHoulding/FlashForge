@@ -1,5 +1,6 @@
 import { Sidebar } from './Sidebar'
 import { Header } from './Header'
+import { UserQuery } from './UserQuery';
 import { AIResponse } from './AIResponse';
 import { useState, useEffect } from "react";
 import '../css/sidebar.css'
@@ -27,7 +28,7 @@ function App() {
       <div className='content'>
         <Header />
         <div className='chat'>
-          <AIResponse />
+          <UserQuery />
         </div>
       </div>
     </main>
