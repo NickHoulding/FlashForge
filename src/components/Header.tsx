@@ -1,10 +1,14 @@
 import { Nav } from "./Nav";
 
-export function Header() {
+interface HeaderProps {
+    onToggleTheme: () => void
+}
+
+export function Header({ onToggleTheme }: HeaderProps) {
     return (
         <header>
             <p id="logo">FlashForge</p>
-            <Nav />
+            <Nav onToggleTheme={onToggleTheme}/>
         </header>
     )
 }

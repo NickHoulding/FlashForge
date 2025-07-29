@@ -1,10 +1,9 @@
 interface SidebarProps {
     isOpen: boolean
     onToggleSidebar: () => void
-    onToggleTheme: () => void
 }
 
-export function Sidebar({ isOpen, onToggleSidebar, onToggleTheme }: SidebarProps) {
+export function Sidebar({ isOpen, onToggleSidebar }: SidebarProps) {
     return (
         <aside className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
             <div className="top-controls">
@@ -14,8 +13,10 @@ export function Sidebar({ isOpen, onToggleSidebar, onToggleTheme }: SidebarProps
             </div>
             <div id="chats"></div>
             <div className="bottom-controls">
-                <button className="toggle-theme" onClick={onToggleTheme}>
-                    <svg fill="currentColor" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22ZM12 20V4C16.4183 4 20 7.58172 20 12C20 16.4183 16.4183 20 12 20Z"/></svg>
+                <button className="profile-button">
+                    <svg fill="currentColor" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM17 13.5C17 12.6716 16.3284 12 15.5 12H8.5C7.67157 12 7 12.6716 7 13.5V14C7 15.9714 8.85951 18 12 18C15.1405 18 17 15.9714 17 14V13.5ZM14.75 8.25C14.75 6.73122 13.5188 5.5 12 5.5C10.4812 5.5 9.25 6.73122 9.25 8.25C9.25 9.76878 10.4812 11 12 11C13.5188 11 14.75 9.76878 14.75 8.25Z"/>
+                    </svg>
                 </button>
             </div>
         </aside>

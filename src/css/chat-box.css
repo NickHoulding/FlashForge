@@ -70,6 +70,7 @@
 }
 
 .chat-box-buttons button {
+    font-size: 0.85rem;
     color: var(--primary);
     display: flex;
     align-items: center;
@@ -105,8 +106,10 @@
 }
 
 #export-button {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
     width: fit-content;
-    padding: 0;
-    padding-right: 10px;
+    padding: 0 10px;
     font-family: 'Satoshi-Medium';
 }

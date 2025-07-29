@@ -8,18 +8,27 @@
     padding: 10px;
     color: var(--primary);
     background-color: var(--neutral);
-    border-right: 2px solid var(--accent);
+    border-right: 1px solid var(--secondary);
     transition: width 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .sidebar.open {
     width: 250px;
     background-color: var(--accent);
+    border-right: 1px solid var(--secondary);
+}
+
+.sidebar.open .toggle-sidebar:hover{
+  cursor: w-resize;
 }
 
 .sidebar.closed {
     width: 60px;
     background-color: var(--neutral);
+}
+
+.sidebar.closed .toggle-sidebar:hover{
+  cursor: e-resize;
 }
 
 .top-controls {
@@ -40,9 +49,11 @@
 
 button {
   width: 40px;
+  height: 40px;
   height: min-content;
   display: flex;
   vertical-align: middle;
+  align-items: center;
   border: none;
   color: var(--primary);
   background-color: transparent;
@@ -51,7 +62,7 @@ button {
 }
 
 button svg {
-  width: 40px
+  margin: 0 auto;
 }
 
 button:hover {

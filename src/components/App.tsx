@@ -25,9 +25,9 @@ function App() {
 
   return (
     <main>
-      <Sidebar isOpen={isOpen} onToggleSidebar={toggleSidebar} onToggleTheme={toggleTheme} />
+      <Sidebar isOpen={isOpen} onToggleSidebar={toggleSidebar} />
       <div className='content'>
-        <Header />
+        <Header onToggleTheme={toggleTheme}/>
         <div className='chat-root'>
           <div className='chat'>
             <UserQuery />

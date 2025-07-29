@@ -4,6 +4,7 @@
     gap: 10px;
     background-color: var(--accent);
     padding: 10px;
+    border: 1px solid var(--secondary);
     border-radius: 20px;
 }
 
@@ -15,7 +16,9 @@
     background-color: var(--neutral);
     color: var(--primary);
     padding: 10px;
+    border: 1px solid var(--secondary);
     border-radius: 10px;
+    box-sizing: border-box;
     resize: none;
 }
 
@@ -39,4 +42,5 @@
 
 .flashcard-delete:hover {
     background-color: var(--delete-red);
+    color: var(--delete-white);
 }
