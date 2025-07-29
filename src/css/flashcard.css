@@ -8,7 +8,7 @@
 }
 
 .flashcard-root textarea {
-    font-family: 'Satoshi-Regular';
+    font-family: 'Satoshi-Medium';
     font-size: 1.05rem;
     text-wrap: wrap;
     border: none;
@@ -26,7 +26,7 @@
 }
 
 .flashcard-title {
-    font-family: 'Satoshi-Bold';
+    font-family: 'Satoshi-Black';
     font-size: 1.25rem;
     color: var(--primary);
     margin: auto 0px;

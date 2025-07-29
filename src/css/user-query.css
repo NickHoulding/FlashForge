@@ -5,15 +5,16 @@
 }
 
 .user-query-text {
-    font-family: 'Satoshi-Regular';
+    font-family: 'Satoshi-Medium';
     font-size: 1.05rem;
     background-color: var(--accent);
     color: var(--primary);
-    padding: 10px 15px;
+    padding: 15px;
     margin: 0;
     width: min(min-content, 100%);
     max-width: 550px;
     word-wrap: wrap;
     border-radius: 20px;
     border-bottom-right-radius: 5px;
+    box-sizing: border-box;
 }

@@ -9,9 +9,9 @@ export function Flashcard() {
                     </svg>
                 </button>
             </div>
-            <textarea className="ai-question" placeholder="Question here...">
+            <textarea className="ai-question" placeholder="Forge a question...">
             </textarea>
-            <textarea className="ai-answer" placeholder="Answer here...">
+            <textarea className="ai-answer" placeholder="Forge an answer...">
             </textarea>
         </div>
     )

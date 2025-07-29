@@ -47,11 +47,11 @@
 .chat-box textarea {
     flex: 1;
     min-height: 75px;
-    padding: 0;
-    padding-top: 10px;
+    padding: 0 5px;
+    padding-top: 15px;
     background-color: transparent;
     color: var(--primary);
-    font-family: 'Satoshi-Regular';
+    font-family: 'Satoshi-Medium';
     font-size: 1.05rem;
     text-wrap: wrap;
     box-sizing: border-box;

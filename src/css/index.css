@@ -24,8 +24,8 @@ body {
 
   /* Light mode */
   --light-primary: #383838;
-  --light-secondary: #5A5A5A;
-  --light-accent: #A0A0A0;
+  --light-secondary: #8A8A8A;
+  --light-accent: #E6E6E6;
   --light-neutral: #f6f6f6;
 
   --delete-red: #B91C1C;
