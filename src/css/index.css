@@ -62,3 +62,18 @@ body {
   --accent: var(--light-accent);
   --neutral: var(--light-neutral);
 }
+
+::-webkit-scrollbar {
+  width: 5px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--accent);
+  border-radius: 4px;
+  cursor: pointer;
+}

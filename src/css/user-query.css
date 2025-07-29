@@ -5,6 +5,8 @@
 }
 
 .user-query-text {
+    font-family: 'Satoshi-Regular';
+    font-size: 1.05rem;
     background-color: var(--accent);
     color: var(--primary);
     padding: 10px 15px;

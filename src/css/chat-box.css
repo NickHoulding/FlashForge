@@ -2,7 +2,8 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 0 20px 20px 20px;
+  padding: 0 20px 0 20px;
+  min-height: 0;
 }
 
 .chat {
@@ -11,23 +12,36 @@
   gap: 50px;
   flex: 1;
   width: min(750px, 100%);
+  padding-right: 10px;
+  padding-bottom: 75px;
   margin: 0 auto;
   box-sizing: border-box;
+  overflow: auto;
+}
+
+.chat ::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 .chat-box {
+    position: relative;
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%);
     display: flex;
     flex-direction: column;
     gap: 10px;
     width: min(750px, 100%);
-    min-height: 100px;
-    margin: 0 auto;
+    height: fit-content;
+    max-height: 200px;
     padding: 10px;
     padding-top: 0;
     box-sizing: border-box;
     background-color: var(--accent);
+    border: 1px solid var(--secondary);
     border-radius: 20px;
-    overflow: hidden;
 }
 
 .chat-box textarea {
@@ -38,7 +52,7 @@
     background-color: transparent;
     color: var(--primary);
     font-family: 'Satoshi-Regular';
-    font-size: 1rem;
+    font-size: 1.05rem;
     text-wrap: wrap;
     box-sizing: border-box;
     border-radius: 10px 10px 0 0;
@@ -56,12 +70,13 @@
 }
 
 .chat-box-buttons button {
+    color: var(--primary);
     display: flex;
     align-items: center;
     vertical-align: middle;
     width: 35px;
     height: 35px;
-    border: 2px solid var(--secondary);
+    border: 1px solid var(--secondary);
     border-radius: 10px;
     box-sizing: border-box;
 }
@@ -83,5 +98,4 @@
 
 .file-button:hover {
     background-color: var(--secondary);
-    color: var(--neutral);
 }

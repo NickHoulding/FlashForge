@@ -32,6 +32,8 @@ function App() {
           <div className='chat'>
             <UserQuery />
             <AIResponse />
+            <UserQuery />
+            <AIResponse />
             <AIResponse />
           </div>
           <ChatBox />
