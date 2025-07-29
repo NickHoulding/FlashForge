@@ -76,26 +76,37 @@
     vertical-align: middle;
     width: 35px;
     height: 35px;
+    background-color: transparent;
+    color: var(--primary);
     border: 1px solid var(--secondary);
     border-radius: 10px;
     box-sizing: border-box;
 }
 
-.send-button {
+.chat-box-buttons button:hover {
+    background-color: var(--secondary);
+}
+
+.chat-buttons-left {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    flex: 1;
+}
+
+#send-button {
     background-color: var(--secondary);
     color: var(--primary);
 }
 
-.send-button:hover {
+#send-button:hover {
     background-color: var(--primary);
     color: var(--neutral);
 }
 
-.file-button {
-    background-color: transparent;
-    color: var(--primary);
-}
-
-.file-button:hover {
-    background-color: var(--secondary);
+#export-button {
+    width: fit-content;
+    padding: 0;
+    padding-right: 10px;
+    font-family: 'Satoshi-Medium';
 }

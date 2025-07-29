@@ -9,7 +9,7 @@ body {
 }
 
 :root {
-  font-family: 'Satoshi-Regular', Helvetica, Arial, sans-serif;
+  font-family: 'Satoshi-Medium', Helvetica, Arial, sans-serif;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
