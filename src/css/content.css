@@ -12,10 +12,20 @@ main {
 }
 
 header {
+  position: absolute;
+  top: 0;
+  left: 60px;
+  right: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 10px 0 20px;
+  background-color: var(--neutral);
+  transition: left 0.3s ease, background-color 0.3s ease;
+}
+
+.sidebar.open ~ .content header {
+  left: 250px;
 }
 
 #logo {

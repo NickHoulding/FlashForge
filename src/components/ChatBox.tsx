@@ -1,4 +1,27 @@
+import { useEffect, useState } from "react"
+
 export function ChatBox() {
+    const [selectedModel, setSelectedModel] = useState('')
+    const [availableModels, setAvailableModels] = useState<string[]>([])
+
+    useEffect(() => {
+        fetch('http://localhost:11434/api/tags')
+            .then(response => response.json())
+            .then(data => {
+                const models = data.models.map((model: any) => model.name)
+                setAvailableModels(models)
+
+                if (models.length > 0) {
+                    setSelectedModel(models[0])
+                }
+            })
+            .catch(error => {
+                console.error('Failed to fetch models: ', error)
+                setAvailableModels([])
+                setSelectedModel('')
+            })
+    }, [])
+
     return (
         <div className="chat-box">
             <textarea placeholder="Forge your studies..."></textarea>
@@ -16,11 +39,25 @@ export function ChatBox() {
                         Export
                     </button>
                 </div>
-                <button id="send-button">
-                    <svg fill="currentColor" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M4.28401 10.2959C3.89639 10.6893 3.90108 11.3225 4.29449 11.7101C4.68789 12.0977 5.32104 12.093 5.70866 11.6996L11 6.32931V20.0004C11 20.5527 11.4477 21.0004 12 21.0004C12.5523 21.0004 13 20.5527 13 20.0004V6.33579L18.2849 11.6996C18.6726 12.093 19.3057 12.0977 19.6991 11.7101C20.0925 11.3225 20.0972 10.6893 19.7096 10.2959L12.8872 3.37171C12.3976 2.8748 11.596 2.87479 11.1064 3.37171L4.28401 10.2959Z"/>
-                    </svg>
-                </button>
+                <div className="chat-buttons-right">
+                    <select 
+                        id="model-selector"
+                        className="model-selector"
+                        value={selectedModel}
+                        onChange={(e) => setSelectedModel(e.target.value)}
+                    >
+                        {availableModels.map(model => (
+                            <option key={model} value={model}>
+                                {model}
+                            </option>
+                        ))}
+                    </select>
+                    <button id="send-button">
+                        <svg fill="currentColor" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4.28401 10.2959C3.89639 10.6893 3.90108 11.3225 4.29449 11.7101C4.68789 12.0977 5.32104 12.093 5.70866 11.6996L11 6.32931V20.0004C11 20.5527 11.4477 21.0004 12 21.0004C12.5523 21.0004 13 20.5527 13 20.0004V6.33579L18.2849 11.6996C18.6726 12.093 19.3057 12.0977 19.6991 11.7101C20.0925 11.3225 20.0972 10.6893 19.7096 10.2959L12.8872 3.37171C12.3976 2.8748 11.596 2.87479 11.1064 3.37171L4.28401 10.2959Z"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
     )
