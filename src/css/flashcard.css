@@ -1,14 +1,13 @@
 .flashcard-root {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 10px;
-    background-color: var(--accent);
-    padding: 10px;
-    border: 1px solid var(--secondary);
+    border: 1px solid transparent;
     border-radius: 20px;
 }
 
 .flashcard-root textarea {
+    flex: 1;
     font-family: 'Satoshi-Medium';
     font-size: 1.05rem;
     text-wrap: wrap;
@@ -22,12 +21,6 @@
     resize: none;
 }
 
-.flashcard-info {
-    display: flex;
-    justify-content: space-between;
-    vertical-align: middle;
-}
-
 .flashcard-title {
     font-family: 'Satoshi-Bold';
     font-size: 1.25rem;
@@ -36,11 +29,16 @@
 }
 
 .flashcard-delete {
-    color: var(--primary);
+    color: transparent;
     background-color: transparent;
+    margin: auto 0;
 }
 
-.flashcard-delete:hover {
+.flashcard-root:hover .flashcard-delete {
+    color: var(--primary);
+}
+
+.flashcard-root:hover .flashcard-delete:hover {
     background-color: var(--delete-red);
     color: var(--delete-white);
 }

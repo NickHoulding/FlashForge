@@ -1,6 +1,5 @@
 .ai-response-content {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    max-width: 550px;
+    gap: 10px;
 }

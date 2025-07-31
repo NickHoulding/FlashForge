@@ -4,6 +4,8 @@ export function AIResponse() {
     return (
         <div className="ai-response-content">
             <Flashcard />
+            <Flashcard />
+            <Flashcard />
         </div>
     )
 }
