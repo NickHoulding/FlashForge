@@ -1,8 +1,20 @@
+import { zodToJsonSchema } from 'zod-to-json-schema'
 import { useEffect, useState } from "react"
+import { z } from 'zod'
+
+const Flashcard = z.object({
+    question: z.string().describe('The question for this flashcard.'),
+    answer: z.string().describe('The answer for this flashcard.')
+})
+
+const StudySet = z.object({
+    flashcards: z.array(Flashcard).describe('A list of flashcard objects containing questions and answers.')
+})
 
 export function ChatBox() {
     const [selectedModel, setSelectedModel] = useState('')
     const [availableModels, setAvailableModels] = useState<string[]>([])
+    const [text, setText] = useState('')
 
     useEffect(() => {
         fetch('http://localhost:11434/api/tags')
@@ -22,9 +34,37 @@ export function ChatBox() {
             })
     }, [])
 
+    async function sendUserQuery() {
+        if(!text.trim() || !selectedModel) { 
+            return
+        }
+
+        setText('')
+        const response = await fetch('http://localhost:11434/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                model: selectedModel,
+                messages: [{ role: 'user', content: text }],
+                format: zodToJsonSchema(StudySet),
+                stream: false
+            }),
+        })
+
+        const data = await response.json()
+        console.log(data.message.content)
+    }
+
     return (
         <div className="chat-box">
-            <textarea placeholder="Forge your studies..."></textarea>
+            <textarea 
+                id="chat-text-area" 
+                placeholder="Forge your studies..."
+                value={text}
+                onChange={(e) => setText((
+                    e.target as HTMLTextAreaElement).value
+                )}
+            ></textarea>
             <div className="chat-box-buttons">
                 <div className="chat-buttons-left">
                     <button id="file-button">
@@ -52,7 +92,8 @@ export function ChatBox() {
                             </option>
                         ))}
                     </select>
-                    <button id="send-button">
+                    <button id="send-button" onClick={sendUserQuery}
+                    >
                         <svg fill="currentColor" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
                             <path d="M4.28401 10.2959C3.89639 10.6893 3.90108 11.3225 4.29449 11.7101C4.68789 12.0977 5.32104 12.093 5.70866 11.6996L11 6.32931V20.0004C11 20.5527 11.4477 21.0004 12 21.0004C12.5523 21.0004 13 20.5527 13 20.0004V6.33579L18.2849 11.6996C18.6726 12.093 19.3057 12.0977 19.6991 11.7101C20.0925 11.3225 20.0972 10.6893 19.7096 10.2959L12.8872 3.37171C12.3976 2.8748 11.596 2.87479 11.1064 3.37171L4.28401 10.2959Z"/>
                         </svg>
