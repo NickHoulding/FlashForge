@@ -65,7 +65,7 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 7px;
   background: transparent;
 }
 
@@ -77,4 +77,8 @@ body {
   background-color: var(--accent);
   border-radius: 4px;
   cursor: pointer;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--primary);
 }
