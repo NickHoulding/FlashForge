@@ -19,12 +19,6 @@
   overflow: auto;
 }
 
-.chat ::-webkit-scrollbar-thumb {
-  background-color: var(--primary);
-  border-radius: 4px;
-  cursor: pointer;
-}
-
 .chat-box {
     position: relative;
     left: 50%;
