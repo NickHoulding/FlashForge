@@ -1,6 +1,4 @@
-interface NavProps {
-    onToggleTheme: () => void
-}
+import type { NavProps } from '../types';
 
 export function Nav({ onToggleTheme }: NavProps) {
     return (

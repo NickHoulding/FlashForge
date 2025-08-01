@@ -1,8 +1,5 @@
+import type { HeaderProps } from '../types';
 import { Nav } from "./Nav";
-
-interface HeaderProps {
-    onToggleTheme: () => void
-}
 
 export function Header({ onToggleTheme }: HeaderProps) {
     return (

@@ -1,9 +1,5 @@
+import type { SidebarProps } from '../types';
 import { ChatEntry } from "./ChatEntry"
-
-interface SidebarProps {
-    isOpen: boolean
-    onToggleSidebar: () => void
-}
 
 export function Sidebar({ isOpen, onToggleSidebar }: SidebarProps) {
     return (

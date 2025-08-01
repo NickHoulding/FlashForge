@@ -9,7 +9,7 @@
     font-size: 1.05rem;
     background-color: var(--accent);
     color: var(--primary);
-    padding: 15px;
+    padding: 10px 15px;
     margin: 0;
     width: min(min-content, 100%);
     max-width: 550px;

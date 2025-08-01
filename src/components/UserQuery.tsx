@@ -1,9 +1,9 @@
-export function UserQuery() {
+import type { UserQueryProps } from '../types';
+
+export function UserQuery({ content }: UserQueryProps) {
     return (
         <div className="user-query-root">
-            <p className="user-query-text">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat, officia impedit facilis adipisci, culpa neque laboriosam placeat nulla odit repellendus nisi nihil similique deserunt magnam maiores sed amet pariatur labore!
-            </p>
+            <p className="user-query-text">{content}</p>
         </div>
     )
 }

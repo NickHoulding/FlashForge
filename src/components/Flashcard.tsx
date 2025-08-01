@@ -1,16 +1,20 @@
-export function Flashcard() {
+import type { FlashcardProps } from '../types'
+
+export function Flashcard({ question = "", answer = "" }: FlashcardProps) {
     return (
         <div className="flashcard-root">
             <textarea 
                 className="ai-question" 
                 placeholder="Forge a question..."
                 rows={1}
+                defaultValue={question}
             >
             </textarea>
             <textarea 
                 className="ai-answer" 
                 placeholder="Forge an answer..."
                 rows={1}
+                defaultValue={answer}
             >
             </textarea>
             <button className="flashcard-delete">

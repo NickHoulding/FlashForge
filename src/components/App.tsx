@@ -1,15 +1,17 @@
+import { useState, useEffect } from "react"
+import type { ChatMessage } from '../types'
+import { AIResponse } from './AIResponse'
+import { UserQuery } from './UserQuery'
+import { ChatBox } from './ChatBox'
 import { Sidebar } from './Sidebar'
 import { Header } from './Header'
-import { UserQuery } from './UserQuery';
-import { AIResponse } from './AIResponse';
-import { ChatBox } from './ChatBox';
-import { useState, useEffect } from "react";
 import '../css/sidebar.css'
 import '../css/app.css'
 
 function App() {
   const [isOpen, setIsOpen] = useState(false)
   const [isDarkTheme, setIsDarkTheme] = useState(true)
+  const [messages, setMessages] = useState<ChatMessage[]>([])
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen)
@@ -17,6 +19,10 @@ function App() {
 
   const toggleTheme = () => {
     setIsDarkTheme(!isDarkTheme)
+  }
+
+  const addMessage = (message: ChatMessage) => {
+    setMessages(prev => [...prev, message])
   }
 
   useEffect(() => {
@@ -30,13 +36,15 @@ function App() {
       <Header onToggleTheme={toggleTheme}/>
         <div className='chat-root'>
           <div className='chat'>
-            <UserQuery />
-            <AIResponse />
-            <UserQuery />
-            <AIResponse />
-            <AIResponse />
+            {messages.map(message => (
+              message.type === 'user' ? (
+                <UserQuery key={message.id} content={message.content} />
+              ) : (
+                <AIResponse key={message.id} flashcards={message.flashcards || []} />
+              )
+            ))}
           </div>
-          <ChatBox />
+          <ChatBox onSendMessage={addMessage}/>
         </div>
       </div>
     </main>
