@@ -1,8 +1,13 @@
 import type { FlashcardProps } from '../types'
 
-export function Flashcard({ question = "", answer = "" }: FlashcardProps) {
+export function Flashcard({ question = "", answer = "", index }: FlashcardProps) {
     return (
-        <div className="flashcard-root">
+        <div 
+            className="flashcard-root"
+            style={{
+                animationDelay: `${index * 0.1}s`,
+            }}
+        >
             <textarea 
                 className="ai-question" 
                 placeholder="Forge a question..."

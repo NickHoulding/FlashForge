@@ -11,6 +11,7 @@ export interface ChatMessage {
 }
 
 export interface FlashcardProps {
+  index: number;
   question?: string;
   answer?: string;
 }

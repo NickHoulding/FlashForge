@@ -4,6 +4,19 @@
     gap: 10px;
     border: 1px solid transparent;
     border-radius: 20px;
+    opacity: 0;
+    animation: fadeInUp 0.3s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .flashcard-root textarea {

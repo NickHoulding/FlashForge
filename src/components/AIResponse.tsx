@@ -6,9 +6,9 @@ export function AIResponse({ flashcards }: AIResponseProps) {
         <div className="ai-response-content">
             {flashcards.map((flashcard, index) => (
                 <Flashcard
-                    key={index}
                     question={flashcard.question}
                     answer={flashcard.answer}
+                    index={index}
                 />
             ))}
         </div>

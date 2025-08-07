@@ -1,4 +1,5 @@
 import type { ChatMessage, ChatBoxProps } from '../types'
+import { SYSTEM_PROMPTS } from '../constants/prompts'
 import { zodToJsonSchema } from 'zod-to-json-schema'
 import { useEffect, useState } from "react"
 import { z } from 'zod'
@@ -55,7 +56,9 @@ export function ChatBox({ onSendMessage }: ChatBoxProps) {
                 headers: { 'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     model: selectedModel,
-                    messages: [{ role: 'user', content: queryText }],
+                    messages: [
+                        { role: 'system', content: SYSTEM_PROMPTS.FLASHCARD_GENERATION },
+                        { role: 'user', content: queryText }],
                     format: zodToJsonSchema(StudySet),
                     stream: false
                 }),
