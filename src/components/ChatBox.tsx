@@ -36,6 +36,13 @@ export function ChatBox({ onSendMessage }: ChatBoxProps) {
             })
     }, [])
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault()
+            sendUserQuery()
+        }
+    }
+
     async function sendUserQuery() {
         if(!text.trim() || !selectedModel) { 
             return
@@ -87,6 +94,7 @@ export function ChatBox({ onSendMessage }: ChatBoxProps) {
                 onChange={(e) => setText(
                     (e.target as HTMLTextAreaElement).value
                 )}
+                onKeyDown={handleKeyDown}
             ></textarea>
             <div className="chat-box-buttons">
                 <div className="chat-buttons-left">

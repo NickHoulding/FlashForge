@@ -7,6 +7,7 @@ import { Sidebar } from './Sidebar'
 import { Header } from './Header'
 import '../css/sidebar.css'
 import '../css/app.css'
+import { Flashcard } from "./Flashcard"
 
 function App() {
   const [isOpen, setIsOpen] = useState(false)
@@ -33,18 +34,23 @@ function App() {
     <main>
       <Sidebar isOpen={isOpen} onToggleSidebar={toggleSidebar} />
       <div className='content'>
-      <Header onToggleTheme={toggleTheme}/>
+        <Header onToggleTheme={toggleTheme}/>
         <div className='chat-root'>
           <div className='chat'>
             {messages.map(message => (
               message.type === 'user' ? (
                 <UserQuery key={message.id} content={message.content} />
-              ) : (
-                <AIResponse key={message.id} flashcards={message.flashcards || []} />
-              )
+              ) : null
             ))}
           </div>
           <ChatBox onSendMessage={addMessage}/>
+        </div>
+        <div className="flash-deck">
+          {messages.map(message => (
+            message.type === 'ai' ? (
+              <AIResponse key={message.id} flashcards={message.flashcards || []} />
+            ) : null
+          ))}
         </div>
       </div>
     </main>

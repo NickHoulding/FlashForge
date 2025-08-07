@@ -1,11 +1,16 @@
 .flashcard-root {
     display: flex;
     flex-direction: row;
-    gap: 10px;
+    gap: 0;
     border: 1px solid transparent;
     border-radius: 20px;
     opacity: 0;
     animation: fadeInUp 0.3s ease-out forwards;
+    transition: gap 0.2s ease;
+}
+
+.flashcard-root:hover {
+    gap: 10px;
 }
 
 @keyframes fadeInUp {
@@ -42,12 +47,15 @@
 }
 
 .flashcard-delete {
+    width: 0;
     color: transparent;
     background-color: transparent;
     margin: auto 0;
+    transition: width 0.2s ease, background-color 0.3s ease, color 0.3s ease;
 }
 
 .flashcard-root:hover .flashcard-delete {
+    width: 35px;
     color: var(--primary);
 }
 
