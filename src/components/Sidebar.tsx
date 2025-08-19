@@ -1,9 +1,7 @@
 import type { SidebarProps } from '../types';
 import ChatEntry from "./ChatEntry";
 
-const Sidebar = (props: SidebarProps) => {
-    const { isOpen, onToggleSidebar } = props;
-    
+const Sidebar = ({ isOpen, onToggleSidebar }: SidebarProps) => {
     return <aside className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
         <div className="top-controls">
             <button 

@@ -13,11 +13,10 @@ const StudySet = z.object({
     flashcards: z.array(Flashcard).describe('A list of flashcard objects containing questions and answers.')
 });
 
-const ChatBox = (props: ChatBoxProps) => {
+const ChatBox = ({ onSendMessage }: ChatBoxProps) => {
     const [availableModels, setAvailableModels] = useState<string[]>([]);
     const [selectedModel, setSelectedModel] = useState('');
     const [text, setText] = useState('');
-    const { onSendMessage } = props;
 
     useEffect(() => {
         fetch('http://localhost:11434/api/tags')

@@ -1,8 +1,6 @@
 import type { FlashcardProps } from '../types';
 
-const Flashcard = (props: FlashcardProps) => {
-    const { question = "", answer = "", index } = props;
-    
+const Flashcard = ({ question, answer, index }: FlashcardProps) => {
     return <div 
             className="flashcard-root"
             style={{

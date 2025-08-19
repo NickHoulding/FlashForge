@@ -1,9 +1,7 @@
 import type { AIResponseProps } from "../types";
 import Flashcard from "./Flashcard";
 
-const AIResponse = (props: AIResponseProps) => {
-    const { flashcards } = props;
-    
+const AIResponse = ({ flashcards }: AIResponseProps) => {
     return <div className="ai-response-content">
         {flashcards.map((flashcard, index) => (
             <Flashcard

@@ -1,8 +1,6 @@
 import type { NavProps } from '../types';
 
-const Nav = (props: NavProps) => {
-    const { onToggleTheme } = props;
-    
+const Nav = ({ onToggleTheme }: NavProps) => {
     return <nav>
         <ul>
             <li>Home</li>

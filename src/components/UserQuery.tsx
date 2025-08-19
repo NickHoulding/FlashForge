@@ -1,8 +1,6 @@
 import type { UserQueryProps } from '../types';
 
-const UserQuery = (props: UserQueryProps) => {
-    const { content } = props;
-    
+const UserQuery = ({ content }: UserQueryProps) => {
     return <div className="user-query-root">
         <p className="user-query-text">
             {content}
