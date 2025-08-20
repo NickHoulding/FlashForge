@@ -1,8 +1,8 @@
 const ChatEntry = () => {
-    return <div className="bg-transparent rounded-[10px] flex gap-[5px] p-[5px] box-border flex-row hover:bg-[var(--secondary)]">
+    return <div className="bg-transparent items-center rounded-[10px] flex gap-[5px] p-[5px] box-border flex-row hover:bg-[var(--secondary)]">
         <textarea
             rows={1}
-            className="flex-1 font-[Satoshi-Medium] text-[0.85rem] leading-[0.85rem] bg-transparent text-[var(--primary)] rounded-[5px] border-0 resize-none box-border overflow-hidden whitespace-nowrap"
+            className="flex-1 font-[Satoshi-Medium] text-[1.05rem] leading-[1.05rem] bg-transparent text-[var(--primary)] rounded-[5px] border-0 resize-none box-border overflow-hidden whitespace-nowrap h-min p-[6px]"
         ></textarea>
         <button className="text-transparent p-[2.5px] w-min hover:bg-[var(--accent)] group-hover:text-[var(--primary)] rounded-[5px] cursor-pointer">
             <svg fill="currentColor" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
