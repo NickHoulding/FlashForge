@@ -6,3 +6,4 @@
 @import url('./sidebar.css');
 @import url('./content.css');
 @import url('chat-box.css');
+@import "tailwindcss";
