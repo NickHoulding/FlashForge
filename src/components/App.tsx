@@ -5,8 +5,7 @@ import UserQuery from './UserQuery';
 import ChatBox from './ChatBox';
 import Sidebar from './Sidebar';
 import Header from './Header';
-import '../css/sidebar.css';
-import '../css/app.css';
+import '../index.css';
 
 const App = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -29,15 +28,15 @@ const App = () => {
     document.documentElement.className = isDarkTheme ? 'dark-theme' : 'light-theme'
   }, [isDarkTheme]);
 
-  return <main>
-    <Sidebar 
-      isOpen={isOpen} 
+  return <main className="flex flex-row h-screen">
+    <Sidebar
+      isOpen={isOpen}
       onToggleSidebar={toggleSidebar}
     />
-    <div className='content'>
-      <Header onToggleTheme={toggleTheme}/>
-      <div className='chat-root'>
-        <div className='chat'>
+    <div className='relative flex flex-row flex-1 h-screen'>
+      <Header onToggleTheme={toggleTheme} />
+      <div className='flex flex-col w-full max-w-[500px] px-[10px] pl-[20px] min-h-0'>
+        <div className='flex flex-col gap-[50px] flex-1 py-[75px] w-full pr-[10px] border-r border-[var(--accent)] mx-auto box-border overflow-auto'>
           {messages.map(message => (
             message.type === 'user' ? (
               <UserQuery 
@@ -47,9 +46,9 @@ const App = () => {
             ) : null
           ))}
         </div>
-        <ChatBox onSendMessage={addMessage}/>
+        <ChatBox onSendMessage={addMessage} />
       </div>
-      <div className="flash-deck">
+      <div className="w-[10px] flex-1 py-[75px] pr-[10px] flex flex-col gap-[10px]">
         {messages.map(message => (
           message.type === 'ai' ? (
             <AIResponse 
