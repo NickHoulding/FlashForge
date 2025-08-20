@@ -48,7 +48,7 @@ const App = () => {
         </div>
         <ChatBox onSendMessage={addMessage} />
       </div>
-      <div className="w-[10px] flex-1 py-[75px] pr-[10px] flex flex-col gap-[10px]">
+      <div className="w-[10px] flex-1 py-[75px] pr-[10px] flex flex-col gap-[10px] overflow-auto">
         {messages.map(message => (
           message.type === 'ai' ? (
             <AIResponse 
