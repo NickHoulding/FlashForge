@@ -24,30 +24,98 @@
   --delete-red: #B91C1C;
 }
 
+/* Preferred color scheme (automatic) */
 @media (prefers-color-scheme: dark) {
-  :root { --primary: var(--dark-primary); --secondary: var(--dark-secondary); --accent: var(--dark-accent); --neutral: var(--dark-neutral); }
+  :root {
+    --primary: var(--dark-primary);
+    --secondary: var(--dark-secondary);
+    --accent: var(--dark-accent);
+    --neutral: var(--dark-neutral);
+  }
 }
+
 @media (prefers-color-scheme: light) {
-  :root { --primary: var(--light-primary); --secondary: var(--light-secondary); --accent: var(--light-accent); --neutral: var(--light-neutral); }
+  :root {
+    --primary: var(--light-primary);
+    --secondary: var(--light-secondary);
+    --accent: var(--light-accent);
+    --neutral: var(--light-neutral);
+  }
 }
-:root.dark-theme { --primary: var(--dark-primary); --secondary: var(--dark-secondary); --accent: var(--dark-accent); --neutral: var(--dark-neutral); }
-:root.light-theme { --primary: var(--light-primary); --secondary: var(--light-secondary); --accent: var(--light-accent); --neutral: var(--light-neutral); }
 
-* { transition: color .3s ease, background-color .3s ease, border-color .3s ease; }
-body { @apply m-0 bg-[var(--neutral)] text-[var(--primary)]; }
+/* Explicit theme override (class based) */
+:root.dark-theme {
+  --primary: var(--dark-primary);
+  --secondary: var(--dark-secondary);
+  --accent: var(--dark-accent);
+  --neutral: var(--dark-neutral);
+}
 
-/* Scrollbar styling */
-::-webkit-scrollbar { width: 7px; background: transparent; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background-color: var(--accent); border-radius: 4px; cursor: pointer; }
-::-webkit-scrollbar-thumb:hover { background-color: var(--primary); }
+:root.light-theme {
+  --primary: var(--light-primary);
+  --secondary: var(--light-secondary);
+  --accent: var(--light-accent);
+  --neutral: var(--light-neutral);
+}
+
+/* Global transitions */
+* {
+  transition:
+    color 0.3s ease,
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+body {
+  @apply m-0 bg-[var(--neutral)] text-[var(--primary)];
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 7px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--accent);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--primary);
+}
 
 /* Placeholder text styling for theme support */
-::placeholder { color: var(--secondary); opacity: 1; transition: color 0.3s ease; }
-::-webkit-input-placeholder { color: var(--secondary); opacity: 1; transition: color 0.3s ease; }
-::-moz-placeholder { color: var(--secondary); opacity: 1; transition: color 0.3s ease; }
-:-ms-input-placeholder { color: var(--secondary); opacity: 1; transition: color 0.3s ease; }
+::placeholder { 
+  color: var(--secondary); 
+  opacity: 1; 
+  transition: color 0.3s ease; 
+}
 
+::-webkit-input-placeholder { 
+  color: var(--secondary); 
+  opacity: 1; 
+  transition: color 0.3s ease; 
+}
+
+::-moz-placeholder { 
+  color: var(--secondary); 
+  opacity: 1; 
+  transition: color 0.3s ease; 
+}
+
+:-ms-input-placeholder { 
+  color: var(--secondary); 
+  opacity: 1; 
+  transition: color 0.3s ease; 
+}
+
+/* Transitions */
 .sidebar-transition {
   transition: all 0.3s ease;
 }
@@ -60,4 +128,14 @@ body { @apply m-0 bg-[var(--neutral)] text-[var(--primary)]; }
   transition-delay: 0s;
 }
 
-@keyframes fadeInUp { 0% { opacity:0; transform:translateY(20px);} 100% { opacity:1; transform:translateY(0);} }
+/* Animations */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
