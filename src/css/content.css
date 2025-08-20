@@ -13,6 +13,7 @@ main {
 }
 
 header {
+  height: 55px;
   position: absolute;
   top: 0;
   left: 60px;
