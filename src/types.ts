@@ -40,3 +40,8 @@ export interface SidebarProps {
   isOpen: boolean;
   onToggleSidebar: () => void;
 };
+
+export interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+};

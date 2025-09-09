@@ -6,13 +6,15 @@ import ChatBox from './ChatBox';
 import LoginPage from "./Login";
 import Sidebar from './Sidebar';
 import Header from './Header';
+import Modal from './Modal';
 import '../index.css';
 
 const App = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isDarkTheme, setIsDarkTheme] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
-  const isLoggedIn = false;
+  const [isModalOpen, setIsModalOpen] = useState(true);
+  const isLoggedIn = true;
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -32,6 +34,7 @@ const App = () => {
 
   return <main className="flex flex-row h-screen">
     {!isLoggedIn ? <LoginPage /> : null}
+    <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     <Sidebar
       isOpen={isOpen}
       onToggleSidebar={toggleSidebar}
