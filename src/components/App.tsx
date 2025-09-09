@@ -3,6 +3,7 @@ import type { ChatMessage } from '../types';
 import AIResponse from './AIResponse';
 import UserQuery from './UserQuery';
 import ChatBox from './ChatBox';
+import LoginPage from "./Login";
 import Sidebar from './Sidebar';
 import Header from './Header';
 import '../index.css';
@@ -11,6 +12,7 @@ const App = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isDarkTheme, setIsDarkTheme] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+  const isLoggedIn = false;
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -29,6 +31,7 @@ const App = () => {
   }, [isDarkTheme]);
 
   return <main className="flex flex-row h-screen">
+    {!isLoggedIn ? <LoginPage /> : null}
     <Sidebar
       isOpen={isOpen}
       onToggleSidebar={toggleSidebar}
