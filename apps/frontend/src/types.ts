@@ -49,8 +49,10 @@ export interface ModalProps {
 };
 
 export interface AuthContextType {
+  token: string | null;
   isAuthenticated: boolean;
-  setIsAuthenticated: (value: boolean) => void;
+  login: (token: string) => void;
+  logout: () => void;
 };
 
 export interface AuthProviderProps {

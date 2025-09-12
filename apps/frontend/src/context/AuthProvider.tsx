@@ -4,19 +4,21 @@ import { useState, useEffect } from "react";
 import { jwtDecode } from 'jwt-decode';
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
+    const [token, setToken] = useState<string | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
+        const storedToken = localStorage.getItem('token');
 
-        if (token) {
+        if (storedToken) {
             try {
                 interface JWTPayload {
                     exp: number;
                 }
-                const decoded = jwtDecode<JWTPayload>(token);
+                const decoded = jwtDecode<JWTPayload>(storedToken);
 
                 if (decoded.exp * 1000 > Date.now()) {
+                    setToken(storedToken);
                     setIsAuthenticated(true);
                 } else {
                     localStorage.removeItem('token');
@@ -27,8 +29,25 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
     }, []);
 
+    const login = (newToken: string) => {
+        localStorage.setItem('token', newToken);
+        setToken(newToken);
+        setIsAuthenticated(true);
+    };
+
+    const logout = () => {
+        localStorage.removeItem('token');
+        setToken(null);
+        setIsAuthenticated(false);
+    };
+
     return (
-        <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
+        <AuthContext.Provider value={{ 
+            token,
+            isAuthenticated,
+            login,
+            logout
+        }}>
             {children}
         </AuthContext.Provider>
     );

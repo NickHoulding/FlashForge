@@ -55,7 +55,7 @@ app.post('/api/login', async (req, res) => {
         const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
         
         if (result.rows.length && await bcrypt.compare(password, result.rows[0].password_hash)) {
-            const token = jwt.sign({ userId: result.rows[0].id }, process.env.JWT_SEC);
+            const token = jwt.sign({ userId: result.rows[0].user_id }, process.env.JWT_SEC);
             res.json({ token });
         } else {
             res.status(401).json({ msg: 'Invalid credentials' });

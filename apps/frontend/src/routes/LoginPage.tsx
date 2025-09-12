@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../context/auth-context";
 
 const LoginPage = () => {
     const navigate = useNavigate();
+    const auth = useContext(AuthContext);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -17,7 +19,10 @@ const LoginPage = () => {
             if (!response.ok) { throw new Error('Login failed'); }
 
             const data = await response.json();
-            localStorage.setItem('token', data.token);
+            if (auth?.login) {
+                auth.login(data.token);
+            }
+
             navigate('/');
         } catch {
             setError('Login failed');
@@ -33,6 +38,12 @@ const LoginPage = () => {
             });
 
             if (!response.ok) { throw new Error('Acount creation failed'); }
+
+            const data = await response.json();
+            if (auth?.login && data.token) {
+                auth.login(data.token);
+            }
+
             navigate('/');
         } catch {
             setError('Account creation failed');
