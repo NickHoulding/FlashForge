@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 export interface FlashcardData {
   question: string;
   answer: string;
@@ -44,4 +46,13 @@ export interface SidebarProps {
 export interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
+};
+
+export interface AuthContextType {
+  isAuthenticated: boolean;
+  setIsAuthenticated: (value: boolean) => void;
+};
+
+export interface AuthProviderProps {
+  children: ReactNode;
 };

@@ -1,19 +1,42 @@
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const LoginPage = () => {
+    const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const PlaceholderErrorMessage = "Incorrect password";
 
-    // TODO: Implement this to handle sign-ins
     const handleSignIn = async () => {
-        return null;
+        try {
+            const response = await fetch('http://localhost:500/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password }),
+            });
+            if (!response.ok) { throw new Error('Login failed'); }
+
+            const data = await response.json();
+            localStorage.setItem('token', data.token);
+            navigate('/');
+        } catch {
+            setError('Login failed');
+        }
     };
 
-    // TODO: Implement this to handle new account creation
     const handleAccountCreate = async () => {
-        return null;
+        try {
+            const response = await fetch('http://localhost:500/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password }),
+            });
+
+            if (!response.ok) { throw new Error('Acount creation failed'); }
+            navigate('/');
+        } catch {
+            setError('Account creation failed');
+        }
     };
 
     return (
@@ -39,7 +62,7 @@ const LoginPage = () => {
                     onClick={handleSignIn}
                     className="flex-1 text-[1.05rem] py-[10px] font-[Satoshi-Regular] bg-[var(--secondary)] hover:bg-[var(--primary)] hover:text-[var(--neutral)] rounded-[10px] cursor-pointer">Sign in</button>
             </div>
-            <div className="w-[300px] text-[1.05rem] font-[Satoshi-Regular] text-center text-red-400 mt-[10px]">{PlaceholderErrorMessage}</div>
+            <div className="w-[300px] text-[1.05rem] font-[Satoshi-Regular] text-center text-red-400 mt-[10px]">{error}</div>
         </main>
     );
 };

@@ -10,7 +10,7 @@ CREATE EXTENSION IF NOT EXISTS vector; -- For vector embeddings
 -- Users table: Stores user authentication and profile information
 CREATE TABLE users (
     user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    username VARCHAR(50) UNIQUE NOT NULL CHECK (LENGTH(username) >= 3),
+    username VARCHAR(50) UNIQUE NOT NULL UNIQUE CHECK (LENGTH(TRIM(username)) > 0),
     password_hash VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
