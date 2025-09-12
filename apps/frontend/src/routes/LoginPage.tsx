@@ -9,7 +9,7 @@ const LoginPage = () => {
 
     const handleSignIn = async () => {
         try {
-            const response = await fetch('http://localhost:500/api/login', {
+            const response = await fetch('http://localhost:3001/api/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password }),
@@ -26,7 +26,7 @@ const LoginPage = () => {
 
     const handleAccountCreate = async () => {
         try {
-            const response = await fetch('http://localhost:500/api/register', {
+            const response = await fetch('http://localhost:3001/api/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password }),
