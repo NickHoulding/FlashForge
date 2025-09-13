@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import LoginPage from "./routes/LoginPage";
 import HomePage from "./routes/HomePage";
-import './index.css';
+import './styles/index.css';
 
 const App = () => {
   return (

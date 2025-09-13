@@ -1,17 +1,8 @@
-import type { ChatMessage, ChatBoxProps } from '../types';
-import { SYSTEM_PROMPTS } from '../constants/prompts';
+import type { ChatMessage, ChatBoxProps } from '../../types';
+import { StudySet } from '../lib/schemas';
 import { zodToJsonSchema } from 'zod-to-json-schema';
+import { SYSTEM_PROMPTS } from '../lib/prompts';
 import { useEffect, useState } from "react";
-import { z } from 'zod';
-
-const Flashcard = z.object({
-    question: z.string().describe('The question for this flashcard.'),
-    answer: z.string().describe('The answer for this flashcard.')
-});
-
-const StudySet = z.object({
-    flashcards: z.array(Flashcard).describe('A list of flashcard objects containing questions and answers.')
-});
 
 const ChatBox = ({ onSendMessage }: ChatBoxProps) => {
     const [availableModels, setAvailableModels] = useState<string[]>([]);
@@ -22,7 +13,7 @@ const ChatBox = ({ onSendMessage }: ChatBoxProps) => {
         fetch('http://localhost:11434/api/tags')
             .then(response => response.json())
             .then(data => {
-                const models = data.models.map((model: any) => model.name);
+                const models = data.models.map((model: { name: string }) => model.name);
                 setAvailableModels(models);
 
                 if (models.length > 0) {
