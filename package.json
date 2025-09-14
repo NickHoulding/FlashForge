@@ -12,7 +12,7 @@
   "scripts": {
     "dev": "npm run dev --workspace=@flashforge/frontend",
     "dev:frontend": "npm run dev --workspace=@flashforge/frontend",
-    "dev:backend": "npm run dev --workspace=@flashforge/backend",
+    "dev:backend": "cd ./apps/backend && uv run server.py",
     "build": "npm run build --workspaces",
     "lint": "npm run lint --workspaces",
     "install:all": "npm install",
