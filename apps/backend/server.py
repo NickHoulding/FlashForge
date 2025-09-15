@@ -8,7 +8,7 @@ from contextlib import asynccontextmanager
 from pydantic import BaseModel
 from sqlalchemy import select
 from datetime import datetime
-from Typing import Dict
+from typing import Dict
 from models import User
 import logging
 import uuid
