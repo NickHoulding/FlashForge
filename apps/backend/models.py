@@ -6,9 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship, validates
 from pgvector.sqlalchemy import Vector
-from typing import Optional, List
 from sqlalchemy.sql import func
-from datetime import datetime
 import uuid
 import enum
 

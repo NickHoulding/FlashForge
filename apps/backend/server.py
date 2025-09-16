@@ -1,7 +1,7 @@
 from auth import hash_password, verify_password, create_access_token, get_current_user
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from fastapi import FastAPI, Depends, HTTPException, status
-from database import get_db, init_db, async_session
+from fastapi.security import HTTPBearer
+from fastapi import FastAPI, Depends, HTTPException
+from database import get_db, init_db
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession
 from contextlib import asynccontextmanager
@@ -11,7 +11,6 @@ from datetime import datetime
 from typing import Dict
 from models import User
 import logging
-import uuid
 import sys
 import os
 
