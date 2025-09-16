@@ -2,8 +2,6 @@
 
 ## Critical Issues
 
-- **Import typo**: Line 1 in `server.py` has `from auth import...` - should be `from .auth import...` or absolute imports
-- **Hardcoded JWT secret**: Using `"your-secret-key-here"` in production is a major security vulnerability
 - **No environment variable validation**: Missing proper .env file handling
 - **Missing error handling middleware**: No global exception handling
 
