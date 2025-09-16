@@ -27,3 +27,7 @@ __pycache__/
 
 # Environment files (anywhere in project)
 **/.env
+*.env
+.env
+.env/.local
+.env.*.local
