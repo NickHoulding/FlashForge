@@ -1,10 +1,12 @@
 from auth import hash_password, verify_password, create_access_token, get_current_user
 from fastapi.security import HTTPBearer
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Request
+from fastapi.responses import JSONResponse
 from database import get_db, init_db
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession
 from contextlib import asynccontextmanager
+from exceptions import handle_exception
 from pydantic import BaseModel
 from sqlalchemy import select
 from datetime import datetime
@@ -65,6 +67,15 @@ class UserResponse(BaseModel):
 class Token(BaseModel):
     """Structure of the authentication token response"""
     token: str
+
+@app.exception_handler(Exception)
+async def global_error_handler(req: Request, exc: Exception):
+    """Route to call custom error handling functionality"""
+    response_data, status_code = handle_exception(exc)
+    return JSONResponse(
+        content=response_data,
+        status_code=status_code
+    )
 
 @app.get("/health")
 async def health_check() -> Dict[str, str]:
