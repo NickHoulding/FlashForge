@@ -1,3 +1,7 @@
+from exceptions import (
+    InvalidUsernameException, InvalidChatNameException,
+    InvalidFlashcardException, InvalidContentException, InvalidFileException
+)
 from sqlalchemy import (
     Column, String, Text, Integer, BigInteger, Boolean, DateTime, 
     ForeignKey, CheckConstraint, Index, Enum as SQLEnum, TIMESTAMP
@@ -48,7 +52,7 @@ class User(Base):
     @validates('username')
     def validate_username(self, key, username):
         if not username or not username.strip():
-            raise ValueError("Username cannot be empty")
+            raise InvalidUsernameException("Username cannot be empty", 400)
         return username.strip()
 
     def __repr__(self):
@@ -80,7 +84,7 @@ class Chat(Base):
     @validates('chat_name')
     def validate_chat_name(self, key, chat_name):
         if not chat_name or not chat_name.strip():
-            raise ValueError("Chat name cannot be empty")
+            raise InvalidChatNameException("Chat name cannot be empty", 400)
         return chat_name.strip()
 
     def __repr__(self):
@@ -111,13 +115,13 @@ class Flashcard(Base):
     @validates('question')
     def validate_question(self, key, question):
         if not question or not question.strip():
-            raise ValueError("Question cannot be empty")
+            raise InvalidFlashcardException("Question cannot be empty", 400)
         return question.strip()
 
     @validates('answer')
     def validate_answer(self, key, answer):
         if not answer or not answer.strip():
-            raise ValueError("Answer cannot be empty")
+            raise InvalidFlashcardException("Answer cannot be empty", 400)
         return answer.strip()
 
     def __repr__(self):
@@ -154,19 +158,19 @@ class KnowledgeBase(Base):
     @validates('content')
     def validate_content(self, key, content):
         if not content or not content.strip():
-            raise ValueError("Content cannot be empty")
+            raise InvalidContentException("Content cannot be empty", 400)
         return content.strip()
 
     @validates('chunk_index')
     def validate_chunk_index(self, key, chunk_index):
         if chunk_index is not None and chunk_index < 0:
-            raise ValueError("Chunk index must be non-negative")
+            raise InvalidContentException("Chunk index must be non-negative", 400)
         return chunk_index
 
     @validates('page_number')
     def validate_page_number(self, key, page_number):
         if page_number is not None and page_number <= 0:
-            raise ValueError("Page number must be positive")
+            raise InvalidContentException("Page number must be positive", 400)
         return page_number
 
     def __repr__(self):
@@ -199,16 +203,16 @@ class UploadedFile(Base):
     @validates('original_filename')
     def validate_filename(self, key, filename):
         if not filename or not filename.strip():
-            raise ValueError("Filename cannot be empty")
+            raise InvalidFileException("Filename cannot be empty", 400)
         return filename.strip()
 
     @validates('file_size')
     def validate_file_size(self, key, file_size):
         if file_size is not None:
             if file_size <= 0:
-                raise ValueError("File size must be positive")
+                raise InvalidFileException("File size must be positive", 400)
             if file_size > 104857600:  # 100MB in bytes
-                raise ValueError("File size cannot exceed 100MB")
+                raise InvalidFileException("File size cannot exceed 100MB", 400)
         return file_size
 
     def __repr__(self):

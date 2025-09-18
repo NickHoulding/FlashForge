@@ -1,3 +1,4 @@
+from exceptions import ConfigurationException
 from dotenv import load_dotenv
 from typing import List
 import secrets
@@ -30,16 +31,16 @@ class Settings:
     def _validate_jwt_config(self) -> None:
         """Validate JWT configuration"""
         if not self.JWT_SECRET_KEY:
-            raise ValueError("JWT_SECRET_KEY must be set in environment variables")
+            raise ConfigurationException("JWT_SECRET_KEY must be set in environment variables", 500)
         
         if len(self.JWT_SECRET_KEY) < 32:
-            raise ValueError("JWT_SECRET_KEY must be at least 32 characters long")
+            raise ConfigurationException("JWT_SECRET_KEY must be at least 32 characters long", 500)
         
         if self.JWT_ALGORITHM not in self.ALLOWED_JWT_ALGORITHMS:
-            raise ValueError(f"JWT_ALGORITHM must be one of {self.ALLOWED_JWT_ALGORITHMS}")
+            raise ConfigurationException(f"JWT_ALGORITHM must be one of {self.ALLOWED_JWT_ALGORITHMS}", 500)
         
         if self.JWT_ACCESS_TOKEN_EXPIRE_MINUTES <= 0:
-            raise ValueError("JWT_ACCESS_TOKEN_EXPIRE_MINUTES must be greater than 0")
+            raise ConfigurationException("JWT_ACCESS_TOKEN_EXPIRE_MINUTES must be greater than 0", 500)
         
         if self.JWT_ACCESS_TOKEN_EXPIRE_MINUTES > 60 * 24:
             logger.warning(f"Warning: JWT token expires in {self.JWT_ACCESS_TOKEN_EXPIRE_MINUTES} minutes (>24h)")
@@ -57,10 +58,10 @@ class Settings:
             missing_vars.append("DB_NAME")
 
         if missing_vars:
-            raise ValueError(f"Missing required database environment variables: {', '.join(missing_vars)}")
+            raise ConfigurationException(f"Missing required database environment variables: {', '.join(missing_vars)}", 500)
         
         if not (1 <= self.db_port <= 65535):
-            raise ValueError(f"DB_PORT must be between 1 and 65535, got: {self.db_port}")
+            raise ConfigurationException(f"DB_PORT must be between 1 and 65535, got: {self.db_port}", 500)
     
     @property
     def database_url(self) -> str:

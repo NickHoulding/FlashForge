@@ -1,5 +1,9 @@
+from exceptions import (
+    UserNotFoundException, InvalidCredentialsException, 
+    TokenException
+)
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
@@ -92,29 +96,23 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     Returns:
         User: The authenticated user.
     Raises:
-        HTTPException: 
-            - If the credentials are invalid.
-            - If the user is not found.
+        InvalidCredentialsException: If the token is invalid (401 Unauthorized).
+        TokenException: If there are issues processing the token (401 Unauthorized).
+        UserNotFoundException: If the user does not exist (401 Unauthorized).
     """
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-
     try:
         payload = jwt.decode(credentials.credentials, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM])
         user_id: str | None = payload.get("userId")
 
         if not user_id:
-            raise credentials_exception
+            raise InvalidCredentialsException("Invalid credentials", 401)
     except JWTError:
-        raise credentials_exception
+        raise TokenException("Error processing JWT token", 401)
     
     result = await db.execute(select(User).where(User.user_id == user_id))
     user = result.scalar_one_or_none()
 
     if not user:
-        raise credentials_exception
+        raise UserNotFoundException("User does not exist", 401)
     
     return user
