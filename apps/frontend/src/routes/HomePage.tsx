@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import type { ChatMessage } from '../types';
+import type { ChatMessage } from '../../types';
 import AIResponse from '../components/AIResponse';
 import UserQuery from '../components/UserQuery';
 import ChatBox from '../components/ChatBox';
@@ -11,7 +11,7 @@ const HomePage = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isDarkTheme, setIsDarkTheme] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);

@@ -2,6 +2,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# Custom Exception Base Class
 class CustomException(Exception):
     def __init__(self, message, status_code) -> None:
         super().__init__(message)
@@ -18,7 +19,7 @@ class UserAlreadyExistsException(CustomException):
     pass
 
 class UserNotFoundException(CustomException):
-    """Raised when a user's credentials is not found in the database"""
+    """Raised when a user's credentials is not found"""
     pass
 
 class InvalidCredentialsException(CustomException):
@@ -35,14 +36,6 @@ class MissingRequiredFieldException(CustomException):
 
 class InvalidPasswordException(CustomException):
     """Raised when password doesn't meet requirements"""
-    pass
-
-class DatabaseConnectionException(CustomException):
-    """Raised when database connection fails"""
-    pass
-
-class DatabaseTransactionException(CustomException):
-    """Raised when a database transaction fails"""
     pass
 
 class ConfigurationException(CustomException):

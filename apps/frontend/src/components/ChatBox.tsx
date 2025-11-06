@@ -49,18 +49,15 @@ const ChatBox = ({ onSendMessage }: ChatBoxProps) => {
         setText('');
 
         try {
-            const response = await fetch('http://localhost:11434/api/chat', {
+            const response = await fetch('http://0.0.0.0:3001/sendmessage', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json'},
                 body: JSON.stringify({
-                    model: selectedModel,
-                    messages: [
-                        { role: 'system', content: SYSTEM_PROMPTS.FLASHCARD_GENERATION },
-                        { role: 'user', content: queryText }],
-                    format: zodToJsonSchema(StudySet),
-                    stream: false
+                    model_name: selectedModel,
+                    user_message: queryText,
                 }),
             });
+
             const data = await response.json();
             const parsedContent = JSON.parse(data.message.content);
             const aiMessage: ChatMessage = {

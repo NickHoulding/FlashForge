@@ -1,17 +1,8 @@
-from exceptions import (
-    UserNotFoundException, InvalidCredentialsException, 
-    TokenException
-)
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi import Depends
-from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
-from sqlalchemy import select
 from typing import Optional
-from config import settings
-from database import get_db
-from models import User
 import bcrypt
 
 security = HTTPBearer()
@@ -85,34 +76,3 @@ def verify_token(token: str):
 
     except JWTError:
         return None
-
-async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security), db: AsyncSession = Depends(get_db)) -> User:
-    """
-    Get current user from JWT token
-    
-    Args:
-        credentials (HTTPAuthorizationCredentials): The HTTP authorization credentials.
-        db (AsyncSession): The database session.
-    Returns:
-        User: The authenticated user.
-    Raises:
-        InvalidCredentialsException: If the token is invalid (401 Unauthorized).
-        TokenException: If there are issues processing the token (401 Unauthorized).
-        UserNotFoundException: If the user does not exist (401 Unauthorized).
-    """
-    try:
-        payload = jwt.decode(credentials.credentials, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM])
-        user_id: str | None = payload.get("userId")
-
-        if not user_id:
-            raise InvalidCredentialsException("Invalid credentials", 401)
-    except JWTError:
-        raise TokenException("Error processing JWT token", 401)
-    
-    result = await db.execute(select(User).where(User.user_id == user_id))
-    user = result.scalar_one_or_none()
-
-    if not user:
-        raise UserNotFoundException("User does not exist", 401)
-    
-    return user
