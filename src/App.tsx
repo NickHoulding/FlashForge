@@ -62,7 +62,7 @@ export function App() {
         <header className="text-center mb-12">
           <h1 className="text-5xl font-bold text-gray-900 mb-4">FlashForge</h1>
           <p className="text-xl text-gray-600">
-            Generate AI-powered flashcards from your course documents in seconds
+            Generate AI-powered flashcards from your docs in seconds
           </p>
         </header>
 
