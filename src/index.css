@@ -1,15 +1,5 @@
 @import "tailwindcss";
 
-@layer base {
-  :root {
-    @apply bg-white text-gray-900;
-  }
-
-  body {
-    @apply m-0 p-0 min-h-screen;
-  }
-}
-
 @media (prefers-reduced-motion) {
   *,
   ::before,

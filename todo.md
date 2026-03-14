@@ -1,6 +1,0 @@
-- [ ] Implement AI integration for flashcard generation
-- [ ] Add file upload to backend/storage
-- [ ] Add flashcard export functionality (Anki, Quizlet, etc.)
-- [ ] Implement user authentication
-- [ ] Add flashcard editing capabilities
-- [ ] Implement spaced repetition algorithm

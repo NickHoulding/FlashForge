@@ -1,16 +1,17 @@
 {
-  "name": "flashforge",
+  "name": "bun-react-template",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "bun --hot src/index.ts",
     "start": "NODE_ENV=production bun src/index.ts",
-    "build": "bun run build.ts",
-    "vercel-build": "bun run build.ts"
+    "build": "bun run build.ts"
   },
   "dependencies": {
     "bun-plugin-tailwind": "^0.1.2",
+    "prettier": "^3.8.1",
+    "prettier-plugin-tailwindcss": "^0.7.2",
     "react": "^19",
     "react-dom": "^19",
     "tailwindcss": "^4.1.11"
