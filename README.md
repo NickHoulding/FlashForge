@@ -1,21 +1,4 @@
-# bun-react-tailwind-template
+# FlashForge
 
-To install dependencies:
-
-```bash
-bun install
-```
-
-To start a development server:
-
-```bash
-bun dev
-```
-
-To run for production:
-
-```bash
-bun start
-```
-
-This project was created using `bun init` in bun v1.3.10. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+## **Important**
+FlashForge is being rebuilt from the ground up as a focused Python MCP server. The original full-stack implementation was shelved in favor of a leaner architecture that integrates directly with AI tooling. Specifically, Claude and a VectorForge RAG backend, to automate the generation of study flashcards from source material. This version will do less, more reliably.
