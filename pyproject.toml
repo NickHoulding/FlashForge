@@ -5,11 +5,38 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "black>=26.3.1",
     "fastmcp>=3.1.1",
+    "isort>=8.0.1",
+    "mypy>=1.19.1",
+    "requests>=2.32.5",
 ]
+
+[project.scripts]
+flashforge = "flashforge.__main__:main"
 
 [tool.uv]
 package = true
 
-[project.scripts]
-flashforge = "flashforge.__main__:main"
+[tool.isort]
+profile = "black"
+line_length = 88
+known_first_party = "FlashForge"
+
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.mypy_cache
+  | \.pytest_cache
+  | \.venv
+  | __pycache__
+)/
+'''
+
+[tool.mypy]
+python_version = 3.11
+strict = true
