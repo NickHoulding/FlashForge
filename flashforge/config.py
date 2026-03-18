@@ -7,8 +7,26 @@ import os
 class Config:
     """Global configuration for FlashForge MCP server runtime settings."""
 
+    # =============================================================================
+    # Server Metadata
+    # =============================================================================
+
     SERVER_NAME: str = "FlashForge MCP Server"
     """Display name for the MCP server."""
+
+    # =============================================================================
+    # MCP Server Binding
+    # =============================================================================
+
+    HOST: str = os.environ.get("HOST", "0.0.0.0")
+    """Network interface the MCP server binds to. Override via HOST env var."""
+
+    PORT: int = int(os.environ.get("PORT", "3003"))
+    """TCP port the MCP server listens on. Override via PORT env var."""
+
+    # =============================================================================
+    # Logging
+    # =============================================================================
 
     LOG_LEVEL: int = logging.INFO
     """Logging verbosity level for the MCP server process."""
@@ -16,11 +34,9 @@ class Config:
     LOG_FORMAT: str = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     """Log record format string passed to logging.basicConfig."""
 
-    HOST: str = os.environ.get("HOST", "0.0.0.0")
-    """Network interface the MCP server binds to. Override via HOST env var."""
-
-    PORT: int = int(os.environ.get("PORT", "3003"))
-    """TCP port the MCP server listens on. Override via PORT env var."""
+    # =============================================================================
+    # Validation
+    # =============================================================================
 
     @classmethod
     def validate(cls) -> None:
