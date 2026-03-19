@@ -2,6 +2,7 @@
 
 import logging
 import os
+from pathlib import Path
 
 from dotenv import load_dotenv
 
@@ -51,6 +52,16 @@ class Config:
 
     TEXT_MAX_LEN: int = int(os.environ.get("TEXT_MAX_LEN", "400"))
     """Maximum character length for input text source material. Override via TEXT_MAX_LEN env var."""
+
+    # =============================================================================
+    # File Storage
+    # =============================================================================
+
+    OUTPUT_DIR: str = os.environ.get("OUTPUT_DIR", "./output")
+    """Directory path for saving flashcard output files. Override via OUTPUT_DIR env var."""
+
+    MAX_FILE_NAME_LEN: int = int(os.environ.get("MAX_FILE_NAME_LEN", "255"))
+    """Maximum character length for output file names. Override via MAX_FILE_NAME_LEN env var."""
 
     # =============================================================================
     # Server Metadata
@@ -140,6 +151,21 @@ class Config:
             raise ValueError("TEXT_MAX_LEN must be positive")
         if cls.TEXT_MAX_LEN > 100000:
             raise ValueError("TEXT_MAX_LEN cannot exceed 100000 characters")
+
+        # File Storage Validation
+        if not isinstance(cls.OUTPUT_DIR, str):
+            raise ValueError("OUTPUT_DIR must be a string")
+        if len(cls.OUTPUT_DIR) == 0:
+            raise ValueError("OUTPUT_DIR cannot be empty")
+        if not Path(cls.OUTPUT_DIR).expanduser().exists():
+            raise ValueError("OUTPUT_DIR directory must exist")
+        if not Path(cls.OUTPUT_DIR).expanduser().is_dir():
+            raise ValueError("OUTPUT_DIR must be a valid directory path")
+
+        if not isinstance(cls.MAX_FILE_NAME_LEN, int):
+            raise ValueError("MAX_FILE_NAME_LEN must be an integer")
+        if cls.MAX_FILE_NAME_LEN <= 0:
+            raise ValueError("MAX_FILE_NAME_LEN must be positive")
 
         # Server Metadata Validation
         if not isinstance(cls.SERVER_NAME, str):

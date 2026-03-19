@@ -34,8 +34,8 @@ def handle_tool_errors(
                 Exception("Flashcard generation failed"),
                 details={
                     "error_type": "validation_error",
-                    "message": "LLM returned invalid JSON or schema-incompatible output",
-                    "suggestion": "Check model output format and schema compatibility",
+                    "message": "llm returned invalid json or schema-incompatible output",
+                    "suggestion": "check model output format and schema compatibility",
                     "validation_details": str(e),
                 },
             )
@@ -70,6 +70,16 @@ def handle_tool_errors(
 
             return build_error_response(
                 Exception("VectorForge connection failed"), details=error_details
+            )
+        except OSError as e:
+            return build_error_response(
+                Exception(""),
+                details={
+                    "error_type": "os_error",
+                    "message": "FlashForge failed to write flashcard data to JSON file",
+                    "suggestion": "Make sure the save path points to an existing directory",
+                    "validation_details": str(e),
+                },
             )
         except Exception as e:
             return build_error_response(

@@ -5,11 +5,11 @@ Contains generation tools and persistence tools for AI-powered flashcard creatio
 
 import json
 import os
+from pathlib import Path
 from typing import Any
 
 import pandas as pd
 import requests
-from fastmcp import tools
 from ollama import chat
 from requests import HTTPError
 
@@ -23,7 +23,11 @@ from .prompts import (
     build_user_prompt,
     build_user_prompt_rag,
 )
-from .utils import _get_flashcards, _validate_generation_params, build_success_response
+from .utils import (
+    _generate_flashcards_from_messages,
+    _validate_generation_params,
+    build_success_response,
+)
 
 # =============================================================================
 # Generation Tools
@@ -52,7 +56,7 @@ def generate_flashcards(text: str, num_cards: int) -> dict[str, Any]:
     """
     _validate_generation_params(text=text, num_cards=num_cards)
 
-    generation: GenerationResponse = _get_flashcards(
+    generation: GenerationResponse = _generate_flashcards_from_messages(
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": build_user_prompt(text, num_cards)},
@@ -120,7 +124,7 @@ def generate_flashcards_from_topic(topic: str, num_cards: int) -> dict[str, Any]
     if len(context) > Config.CONTEXT_MAX_LEN:
         context = context[: Config.CONTEXT_MAX_LEN] + "..."
 
-    generation: GenerationResponse = _get_flashcards(
+    generation: GenerationResponse = _generate_flashcards_from_messages(
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT_RAG},
             {
@@ -143,19 +147,39 @@ def generate_flashcards_from_topic(topic: str, num_cards: int) -> dict[str, Any]
 
 @mcp.tool(description="Save flashcards to persistent storage")
 @handle_tool_errors
-def save_flashcards(flashcards: dict[str, str]) -> dict[str, Any]:
-    """Persist flashcards to the configured storage backend.
+def save_flashcards(flashcards: dict[str, str], file_name: str) -> dict[str, Any]:
+    """Save flashcards to a JSON file in the configured output directory.
 
     Args:
         flashcards: Dictionary mapping flashcard IDs to their data.
+        file_name: Name of the output file (without directory path).
 
     Returns:
-        Success response with storage confirmation details.
+        Success response dict with confirmation message and save location.
 
     Raises:
-        NotImplementedError: This tool is not yet implemented.
+        ValueError: If flashcards dict is empty, file_name is empty or invalid,
+            or file_name exceeds MAX_FILE_NAME_LEN.
+        OSError: If file cannot be created or written to the output directory.
     """
-    raise NotImplementedError
+    if len(flashcards) == 0:
+        raise ValueError("0 flascards were provided - nothing to save")
+    if len(file_name) == 0:
+        raise ValueError("file_name cannot be empty")
+    if len(file_name) > Config.MAX_FILE_NAME_LEN:
+        raise ValueError(f"file_name too long ({len(file_name)})")
+
+    file_path: Path = Path(Config.OUTPUT_DIR) / file_name
+
+    try:
+        with open(file_path, "w") as f:
+            json.dump(flashcards, f, indent=2)
+    except OSError as e:
+        raise OSError(f"Failed to write flashcards to {file_path}: {e.strerror}") from e
+
+    return build_success_response(
+        {"message": f"Flashcards successfully saved to: {file_path}"}
+    )
 
 
 @mcp.tool(description="Export flashcards to CSV format")

@@ -72,7 +72,9 @@ def _validate_generation_params(text: str, num_cards: int) -> None:
         raise ValueError(f"num_cards must not exceed the maximum: {Config.MAX_CARDS}")
 
 
-def _get_flashcards(messages: list[dict[str, Any]]) -> GenerationResponse:
+def _generate_flashcards_from_messages(
+    messages: list[dict[str, Any]],
+) -> GenerationResponse:
     """Call the LLM to generate flashcards from provided messages.
 
     Args:
