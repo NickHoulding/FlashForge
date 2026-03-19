@@ -11,7 +11,7 @@ def main() -> None:
     """Initialize configuration, logging, and start the MCP server."""
     Config.validate()
     logging.basicConfig(level=Config.LOG_LEVEL, format=Config.LOG_FORMAT)
-    mcp.run(transport="sse", host=Config.HOST, port=Config.PORT)
+    mcp.run(transport="stdio")
 
 
 if __name__ == "__main__":
