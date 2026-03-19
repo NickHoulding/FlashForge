@@ -22,6 +22,21 @@ class Config:
     """Enable extended reasoning mode during generation. Override via SHOULD_THINK env var."""
 
     # =============================================================================
+    # VectorForge RAG Connection
+    # =============================================================================
+
+    VECTORFORGE_BASE_URL: str = os.environ.get(
+        "VECTORFORGE_BASE_URL", "http://localhost:8000"
+    )
+    """Base URL for the VectorForge RAG service. Override via VECTORFORGE_BASE_URL env var."""
+
+    RAG_TOP_K: int = int(os.environ.get("RAG_TOP_K", "5"))
+    """Number of top results to retrieve from VectorForge search. Override via RAG_TOP_K env var."""
+
+    CONTEXT_MAX_LEN: int = int(os.environ.get("CONTEXT_MAX_LEN", "10000"))
+    """Maximum character length for concatenated RAG context. Override via CONTEXT_MAX_LEN env var."""
+
+    # =============================================================================
     # Flashcard Constraints
     # =============================================================================
 
@@ -74,6 +89,28 @@ class Config:
 
         if not isinstance(cls.SHOULD_THINK, bool):
             raise ValueError("SHOULD_THINK must be a boolean")
+
+        # VectorForge RAG Connection Validation
+        if not isinstance(cls.VECTORFORGE_BASE_URL, str):
+            raise ValueError("VECTORFORGE_BASE_URL must be a string")
+        if len(cls.VECTORFORGE_BASE_URL) == 0:
+            raise ValueError("VECTORFORGE_BASE_URL cannot be empty")
+        if not cls.VECTORFORGE_BASE_URL.startswith(("http://", "https://")):
+            raise ValueError("VECTORFORGE_BASE_URL must start with http:// or https://")
+
+        if not isinstance(cls.RAG_TOP_K, int):
+            raise ValueError("RAG_TOP_K must be an int")
+        if cls.RAG_TOP_K <= 0:
+            raise ValueError("RAG_TOP_K must be positive")
+        if cls.RAG_TOP_K > 50:
+            raise ValueError("RAG_TOP_K cannot exceed 50")
+
+        if not isinstance(cls.CONTEXT_MAX_LEN, int):
+            raise ValueError("CONTEXT_MAX_LEN must be an int")
+        if cls.CONTEXT_MAX_LEN <= 0:
+            raise ValueError("CONTEXT_MAX_LEN must be positive")
+        if cls.CONTEXT_MAX_LEN > 50000:
+            raise ValueError("CONTEXT_MAX_LEN cannot exceed 50000 characters")
 
         # Flashcard Constraints Validation
         if not isinstance(cls.QUESTION_MAX_LEN, int):

@@ -11,13 +11,19 @@ import pandas as pd
 import requests
 from fastmcp import tools
 from ollama import chat
+from requests import HTTPError
 
 from .config import Config
 from .errors import handle_tool_errors
 from .instance import mcp
 from .models import GenerationResponse
-from .prompts import SYSTEM_PROMPT, build_user_prompt
-from .utils import build_success_response
+from .prompts import (
+    SYSTEM_PROMPT,
+    SYSTEM_PROMPT_RAG,
+    build_user_prompt,
+    build_user_prompt_rag,
+)
+from .utils import _get_flashcards, _validate_generation_params, build_success_response
 
 # =============================================================================
 # Generation Tools
@@ -44,30 +50,13 @@ def generate_flashcards(text: str, num_cards: int) -> dict[str, Any]:
         ValueError: If text is empty, exceeds TEXT_MAX_LEN, num_cards is
             invalid, or generation produces invalid output.
     """
-    if not text:
-        raise ValueError(f"Input text too short ({len(text)})")
-    if len(text) > Config.TEXT_MAX_LEN:
-        raise ValueError(f"Input text too long ({len(text)})")
-    if num_cards <= 0:
-        raise ValueError("num_cards must be a positive integer")
-    if num_cards > Config.MAX_CARDS:
-        raise ValueError(f"num_cards must not exceed the maximum: {Config.MAX_CARDS}")
+    _validate_generation_params(text=text, num_cards=num_cards)
 
-    resp = chat(
-        model=Config.OLLAMA_MODEL,
-        think=Config.SHOULD_THINK,
-        format=GenerationResponse.model_json_schema(),
+    generation: GenerationResponse = _get_flashcards(
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": build_user_prompt(text, num_cards)},
-        ],
-    )
-
-    if not resp.message.content:
-        raise ValueError("Did not generate any content")
-
-    generation: GenerationResponse = GenerationResponse.model_validate_json(
-        resp.message.content or ""
+        ]
     )
 
     if len(generation.flashcards) > num_cards:
@@ -79,7 +68,8 @@ def generate_flashcards(text: str, num_cards: int) -> dict[str, Any]:
 
 
 @mcp.tool(description="Generate flashcards from a topic name using AI research")
-def generate_flashcards_from_topic(topic: str) -> dict[str, Any]:
+@handle_tool_errors
+def generate_flashcards_from_topic(topic: str, num_cards: int) -> dict[str, Any]:
     """Generate flashcards by having the LLM research a topic autonomously.
 
     Args:
@@ -91,7 +81,59 @@ def generate_flashcards_from_topic(topic: str) -> dict[str, Any]:
     Raises:
         NotImplementedError: This tool is not yet implemented.
     """
-    raise NotImplementedError
+    _validate_generation_params(text=topic, num_cards=num_cards)
+
+    response = requests.post(
+        url=f"{Config.VECTORFORGE_BASE_URL}/collections/flashforge/search",
+        params={"query": topic, "top_k": Config.RAG_TOP_K},
+    )
+
+    if response.status_code != 200:
+        error = HTTPError(
+            f"VectorForge search failed with status {response.status_code}: {response.text}"
+        )
+        error.response = response
+        raise error
+    if not response.content:
+        error = HTTPError("VectorForge returned empty response")
+        error.response = response
+        raise error
+
+    data = response.json()
+    results: list[dict[str, Any]] = data.get("results", [])
+
+    if not results:
+        raise ValueError(f"No context found for topic: {topic}")
+
+    context_chunks: list[str] = []
+    for result in results:
+        if "content" in result and result["content"]:
+            content = result["content"]
+            if isinstance(content, str):
+                context_chunks.append(content)
+
+    if not context_chunks:
+        raise ValueError(f"No valid content retrieved for topic: {topic}")
+
+    context = "\n\n".join(context_chunks)
+
+    if len(context) > Config.CONTEXT_MAX_LEN:
+        context = context[: Config.CONTEXT_MAX_LEN] + "..."
+
+    generation: GenerationResponse = _get_flashcards(
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT_RAG},
+            {
+                "role": "user",
+                "content": build_user_prompt_rag(topic, context, num_cards),
+            },
+        ],
+    )
+
+    if len(generation.flashcards) == 0:
+        raise ValueError(f"Failed to generate any flashcards")
+
+    return build_success_response(generation.model_dump())
 
 
 # =============================================================================
@@ -100,6 +142,7 @@ def generate_flashcards_from_topic(topic: str) -> dict[str, Any]:
 
 
 @mcp.tool(description="Save flashcards to persistent storage")
+@handle_tool_errors
 def save_flashcards(flashcards: dict[str, str]) -> dict[str, Any]:
     """Persist flashcards to the configured storage backend.
 
@@ -116,6 +159,7 @@ def save_flashcards(flashcards: dict[str, str]) -> dict[str, Any]:
 
 
 @mcp.tool(description="Export flashcards to CSV format")
+@handle_tool_errors
 def export_flashcards_csv(file_path: str) -> dict[str, Any]:
     """Export flashcards to a CSV file for external use.
 

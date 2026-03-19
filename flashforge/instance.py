@@ -1,4 +1,7 @@
-"""FastMCP instance for FlashForge MCP Server."""
+"""FastMCP instance for FlashForge MCP Server.
+
+Creates the global MCP server instance used by all tool modules.
+"""
 
 from fastmcp import FastMCP
 
