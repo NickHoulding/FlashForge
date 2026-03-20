@@ -24,8 +24,12 @@ from .prompts import (
 from .utils import (
     _generate_flashcards_from_messages,
     _validate_generation_params,
+    _validate_safe_path,
     build_success_response,
 )
+import logging
+
+logger: logging.Logger = logging.getLogger(__name__)
 
 # =============================================================================
 # Generation Tools
@@ -88,6 +92,7 @@ def generate_flashcards_from_topic(topic: str, num_cards: int) -> dict[str, Any]
     response = requests.post(
         url=f"{Config.VECTORFORGE_BASE_URL}/collections/flashforge/search",
         params={"query": topic, "top_k": Config.RAG_TOP_K},
+        timeout=Config.TIMEOUT
     )
 
     if response.status_code != 200:
@@ -167,7 +172,10 @@ def save_flashcards(flashcards: dict[str, str], file_name: str) -> dict[str, Any
     if len(file_name) > Config.MAX_FILE_NAME_LEN:
         raise ValueError(f"file_name too long ({len(file_name)})")
 
-    file_path: Path = Path(Config.OUTPUT_DIR) / file_name
+    file_path: Path = _validate_safe_path(
+        base_dir=Path(Config.OUTPUT_DIR),
+        user_path=file_name
+    )
 
     try:
         with open(file_path, "w") as f:

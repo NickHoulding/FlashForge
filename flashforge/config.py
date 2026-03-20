@@ -19,7 +19,8 @@ class Config:
     OLLAMA_MODEL: str = os.environ.get("FLASHCARD_MODEL", "qwen3.5:4b")
     """Model name to use for flashcard generation. Override via FLASHCARD_MODEL env var."""
 
-    SHOULD_THINK: bool = bool(os.environ.get("SHOULD_THINK", "False"))
+    _SHOULD_THINK_STR: str = os.environ.get("SHOULD_THINK", "False").lower()
+    SHOULD_THINK: bool = _SHOULD_THINK_STR in ("true", "True")
     """Enable extended reasoning mode during generation. Override via SHOULD_THINK env var."""
 
     # =============================================================================
@@ -36,6 +37,9 @@ class Config:
 
     CONTEXT_MAX_LEN: int = int(os.environ.get("CONTEXT_MAX_LEN", "10000"))
     """Maximum character length for concatenated RAG context. Override via CONTEXT_MAX_LEN env var."""
+
+    TIMEOUT: int = 30
+    """"""
 
     # =============================================================================
     # Flashcard Constraints
