@@ -12,6 +12,7 @@ from typing import Any
 import pandas as pd
 import requests
 from requests import HTTPError
+from requests.exceptions import ConnectionError, Timeout
 
 from .config import Config
 from .errors import handle_tool_errors
@@ -32,6 +33,16 @@ from .utils import (
 )
 
 logger: logging.Logger = logging.getLogger(__name__)
+
+
+# =============================================================================
+# Health Check Tool
+# =============================================================================
+@mcp.tool(description="Health check for MCP server")
+def health_check() -> dict[str, Any]:
+    """Verify the server is operational."""
+    return build_success_response({"status": "healthy"})
+
 
 # =============================================================================
 # Generation Tools
@@ -99,7 +110,8 @@ def generate_flashcards(text: str, num_cards: int) -> dict[str, Any]:
     )
     logger.debug("Exiting generate_flashcards: success")
 
-    return build_success_response(generation.model_dump())
+    result: dict[str, Any] = generation.model_dump()
+    return build_success_response(result)
 
 
 @mcp.tool(description="Generate flashcards from a topic name using AI research")
@@ -137,12 +149,19 @@ def generate_flashcards_from_topic(topic: str, num_cards: int) -> dict[str, Any]
         Config.RAG_TOP_K,
     )
     rag_start = time.time()
-
-    response = requests.post(
-        url="%s/collections/flashforge/search" % Config.VECTORFORGE_BASE_URL,
-        params={"query": topic, "top_k": Config.RAG_TOP_K},
-        timeout=Config.TIMEOUT,
-    )
+    try:
+        response = requests.post(
+            url="%s/collections/flashforge/search" % Config.VECTORFORGE_BASE_URL,
+            params={"query": topic, "top_k": Config.RAG_TOP_K},
+            timeout=Config.HTTP_TIMEOUT,
+        )
+        response.raise_for_status()
+    except Timeout:
+        raise ValueError(
+            "VectorForge request timed out after %d seconds", Config.HTTP_TIMEOUT
+        )
+    except ConnectionError:
+        raise ValueError("Cannot connect to VectorForge - service unavailable")
 
     if response.status_code != 200:
         logger.error(
@@ -164,9 +183,13 @@ def generate_flashcards_from_topic(topic: str, num_cards: int) -> dict[str, Any]
 
     logger.debug("VectorForge query completed in %.2fs", time.time() - rag_start)
 
-    data = response.json()
-    results: list[dict[str, Any]] = data.get("results", [])
+    try:
+        data: dict[str, Any] = response.json()
+    except json.JSONDecodeError as e:
+        logger.error("Invalid JSON from VectorForge")
+        raise ValueError("Vectorforge returned invalid JSON: %s", response)
 
+    results: list[dict[str, Any]] = data.get("results", [])
     logger.debug("Retrieved %d results from VectorForge", len(results))
 
     if not results:
@@ -216,7 +239,8 @@ def generate_flashcards_from_topic(topic: str, num_cards: int) -> dict[str, Any]
     )
     logger.debug("Exiting generate_flashcards_from_topic: success")
 
-    return build_success_response(generation.model_dump())
+    result = generation.model_dump()
+    return build_success_response(result)
 
 
 # =============================================================================
@@ -250,7 +274,7 @@ def save_flashcards(flashcards: dict[str, str], file_name: str) -> dict[str, Any
 
     if len(flashcards) == 0:
         logger.error("Cannot save: flashcards dict is empty")
-        raise ValueError("0 flascards were provided - nothing to save")
+        raise ValueError("0 flashcards were provided - nothing to save")
     if len(file_name) == 0:
         logger.error("Cannot save: file_name is empty")
         raise ValueError("file_name cannot be empty")
@@ -323,9 +347,13 @@ def export_flashcards_csv(
 
     try:
         with open(in_path, "r") as f:
-            data: dict[str, str] = json.load(f)
+            data: dict[str, Any] = json.load(f)
+    except json.JSONDecodeError as e:
+        logger.error("VectorForge tried to load invalid JSON")
+        raise ValueError("Vectorforge tried to load invalid JSON from %s", in_path)
     except FileNotFoundError as e:
         logger.error("JSON file not found: %s", in_path, exc_info=True)
+
         raise FileNotFoundError(
             "JSON File not found at location: '%s'" % in_path
         ) from e
@@ -340,7 +368,14 @@ def export_flashcards_csv(
     num_cards = len(data.get("flashcards", []))
     logger.debug("Loaded %d flashcards from JSON", num_cards)
 
-    df: pd.DataFrame = pd.DataFrame(data.get("flashcards", []))
+    if "flashcards" not in data:
+        raise ValueError("JSON file must contain 'flashcards' key")
+
+    flashcards: list[dict[str, str]] = data["flashcards"]
+    if not isinstance(flashcards, list):
+        raise ValueError("'flashcards' must be a list")
+
+    df: pd.DataFrame = pd.DataFrame(flashcards)
     df.to_csv(out_path, index=False)
 
     logger.info("Successfully exported %d flashcards to CSV: %s", num_cards, out_path)

@@ -29,6 +29,7 @@ def handle_tool_errors(
 
     @functools.wraps(func)
     def sync_wrapper(*args: Any, **kwargs: Any) -> dict[str, Any]:
+        """"""
         try:
             return func(*args, **kwargs)
 
@@ -40,7 +41,7 @@ def handle_tool_errors(
                 exc_info=True,
             )
             return build_error_response(
-                Exception("Flashcard generation failed"),
+                error=e,
                 details={
                     "error_type": "validation_error",
                     "message": "llm returned invalid json or schema-incompatible output",
@@ -84,9 +85,7 @@ def handle_tool_errors(
 
             error_details["status_code"] = str(status_code)
 
-            return build_error_response(
-                Exception("VectorForge connection failed"), details=error_details
-            )
+            return build_error_response(error=e, details=error_details)
         except FileNotFoundError as e:
             logger.error(
                 "File not found error in %s: %s",
@@ -95,7 +94,7 @@ def handle_tool_errors(
                 exc_info=True,
             )
             return build_error_response(
-                Exception("File not found"),
+                error=e,
                 details={
                     "error_type": "file_not_found_error",
                     "message": "Input file does not exist",
@@ -111,7 +110,7 @@ def handle_tool_errors(
                 exc_info=True,
             )
             return build_error_response(
-                Exception("File operation failed"),
+                error=e,
                 details={
                     "error_type": "os_error",
                     "message": "FlashForge could not read or write a file",
@@ -128,7 +127,7 @@ def handle_tool_errors(
                 exc_info=True,
             )
             return build_error_response(
-                Exception("Operation failed"),
+                error=e,
                 details={
                     "error_type": type(e).__name__,
                     "message": str(e),

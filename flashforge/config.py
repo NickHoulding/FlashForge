@@ -25,6 +25,9 @@ class Config:
     SHOULD_THINK: bool = _SHOULD_THINK_STR in ("true", "True")
     """Enable extended reasoning mode during generation. Override via SHOULD_THINK env var."""
 
+    OLLAMA_TIMEOUT: int = int(os.environ.get("OLLAMA_TIMEOUT", "300"))
+    """"""
+
     # =============================================================================
     # VectorForge RAG Connection
     # =============================================================================
@@ -40,7 +43,7 @@ class Config:
     CONTEXT_MAX_LEN: int = int(os.environ.get("CONTEXT_MAX_LEN", "10000"))
     """Maximum character length for concatenated RAG context. Override via CONTEXT_MAX_LEN env var."""
 
-    TIMEOUT: int = 30
+    HTTP_TIMEOUT: int = int(os.environ.get("HTTP_TIMEOUT", "30"))
     """"""
 
     # =============================================================================

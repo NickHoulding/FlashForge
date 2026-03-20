@@ -127,7 +127,7 @@ def _generate_flashcards_from_messages(
         raise ValueError("Did not generate any content")
 
     generation: GenerationResponse = GenerationResponse.model_validate_json(
-        resp.message.content or ""
+        resp.message.content
     )
 
     logger.debug(
