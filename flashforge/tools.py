@@ -121,6 +121,7 @@ def generate_flashcards_from_topic(topic: str, num_cards: int) -> dict[str, Any]
 
     Args:
         topic: Subject or topic name to generate flashcards about.
+        num_cards: Number of flashcards to generate (1 to MAX_CARDS).
 
     Returns:
         Success response dict containing generated flashcards.

@@ -26,7 +26,7 @@ class Config:
     """Enable extended reasoning mode during generation. Override via SHOULD_THINK env var."""
 
     OLLAMA_TIMEOUT: int = int(os.environ.get("OLLAMA_TIMEOUT", "300"))
-    """"""
+    """Maximum seconds to wait for Ollama API responses. Override via OLLAMA_TIMEOUT env var."""
 
     # =============================================================================
     # VectorForge RAG Connection
@@ -44,7 +44,7 @@ class Config:
     """Maximum character length for concatenated RAG context. Override via CONTEXT_MAX_LEN env var."""
 
     HTTP_TIMEOUT: int = int(os.environ.get("HTTP_TIMEOUT", "30"))
-    """"""
+    """Maximum seconds to wait for HTTP requests to external services. Override via HTTP_TIMEOUT env var."""
 
     # =============================================================================
     # Flashcard Constraints

@@ -29,7 +29,7 @@ def handle_tool_errors(
 
     @functools.wraps(func)
     def sync_wrapper(*args: Any, **kwargs: Any) -> dict[str, Any]:
-        """"""
+        """Execute wrapped function with standardized error handling and response formatting."""
         try:
             return func(*args, **kwargs)
 
