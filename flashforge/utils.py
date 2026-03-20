@@ -1,13 +1,13 @@
 """Shared response-building helpers for MCP tool handlers."""
 
+import logging
+from pathlib import Path
 from typing import Any
 
 from ollama import chat
 
 from .config import Config
 from .models import GenerationResponse
-from pathlib import Path
-import logging
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -78,7 +78,9 @@ def _validate_generation_params(text: str, num_cards: int) -> None:
         logger.error(f"Input argument 'num_cards' was negative")
         raise ValueError("num_cards must be a positive integer")
     if num_cards > Config.MAX_CARDS:
-        logger.error(f"Cannot generate greater than {Config.MAX_CARDS} flashcards at once. Attempted {num_cards}")
+        logger.error(
+            f"Cannot generate greater than {Config.MAX_CARDS} flashcards at once. Attempted {num_cards}"
+        )
         raise ValueError(f"num_cards must not exceed the maximum: {Config.MAX_CARDS}")
 
     logger.debug("Generation tool input args validated")

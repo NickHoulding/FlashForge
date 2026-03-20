@@ -4,6 +4,7 @@ Contains generation tools and persistence tools for AI-powered flashcard creatio
 """
 
 import json
+import logging
 from pathlib import Path
 from typing import Any
 
@@ -27,7 +28,6 @@ from .utils import (
     _validate_safe_path,
     build_success_response,
 )
-import logging
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -92,7 +92,7 @@ def generate_flashcards_from_topic(topic: str, num_cards: int) -> dict[str, Any]
     response = requests.post(
         url=f"{Config.VECTORFORGE_BASE_URL}/collections/flashforge/search",
         params={"query": topic, "top_k": Config.RAG_TOP_K},
-        timeout=Config.TIMEOUT
+        timeout=Config.TIMEOUT,
     )
 
     if response.status_code != 200:
@@ -173,8 +173,7 @@ def save_flashcards(flashcards: dict[str, str], file_name: str) -> dict[str, Any
         raise ValueError(f"file_name too long ({len(file_name)})")
 
     file_path: Path = _validate_safe_path(
-        base_dir=Path(Config.OUTPUT_DIR),
-        user_path=file_name
+        base_dir=Path(Config.OUTPUT_DIR), user_path=file_name
     )
 
     try:
