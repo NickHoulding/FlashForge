@@ -90,7 +90,7 @@ class Config:
     LOG_FORMAT: str = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     """Log record format string passed to logging.basicConfig (deprecated, kept for backwards compatibility)."""
 
-    LOG_FILE: str = os.environ.get("FF_LOG_FILE", "./logs/flashforge.log")
+    LOG_FILE: str = os.environ.get("FF_LOG_FILE", ".logs/flashforge.log")
     """Path to log file for rotating file handler. Override via FF_LOG_FILE env var."""
 
     LOG_JSON_CONSOLE: bool = (
