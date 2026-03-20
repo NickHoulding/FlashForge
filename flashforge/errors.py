@@ -1,7 +1,7 @@
 """Error-handling decorator for FlashForge MCP tool functions."""
 
 import functools
-from typing import Any, Callable, cast
+from typing import Any, Callable
 
 from pydantic import ValidationError
 from requests import HTTPError
@@ -71,14 +71,24 @@ def handle_tool_errors(
             return build_error_response(
                 Exception("VectorForge connection failed"), details=error_details
             )
+        except FileNotFoundError as e:
+            return build_error_response(
+                Exception("File not found"),
+                details={
+                    "error_type": "file_not_found_error",
+                    "message": "Input file does not exist",
+                    "suggestion": "Verify the input path exists and points to a readable file",
+                    "error_details": str(e),
+                },
+            )
         except OSError as e:
             return build_error_response(
-                Exception(""),
+                Exception("File operation failed"),
                 details={
                     "error_type": "os_error",
-                    "message": "FlashForge failed to write flashcard data to JSON file",
-                    "suggestion": "Make sure the save path points to an existing directory",
-                    "validation_details": str(e),
+                    "message": "FlashForge could not read or write a file",
+                    "suggestion": "Check file permissions, parent directory existence, and available disk space",
+                    "error_details": str(e),
                 },
             )
         except Exception as e:

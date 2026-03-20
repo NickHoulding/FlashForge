@@ -184,16 +184,42 @@ def save_flashcards(flashcards: dict[str, str], file_name: str) -> dict[str, Any
 
 @mcp.tool(description="Export flashcards to CSV format")
 @handle_tool_errors
-def export_flashcards_csv(file_path: str) -> dict[str, Any]:
-    """Export flashcards to a CSV file for external use.
+def export_flashcards_csv(
+    input_path: str, output_path: str | None = None
+) -> dict[str, Any]:
+    """Export flashcards from a JSON file to CSV format.
+
+    Reads a JSON file containing flashcards and converts it to a CSV file
+    with columns for each flashcard field (question, answer, etc.).
 
     Args:
-        file_path: Destination path for the CSV file.
+        input_path: Path to the input JSON file containing flashcards.
+        output_path: Optional path for the output CSV file. If not provided,
+            uses the same path as input_path but with .csv extension.
 
     Returns:
-        Success response with export details and file path.
+        Success response dict with confirmation message.
 
     Raises:
-        NotImplementedError: This tool is not yet implemented.
+        FileNotFoundError: If input_path does not exist.
+        OSError: If input file cannot be read, or if the output file cannot be written.
     """
-    raise NotImplementedError
+    in_path: Path = Path(input_path).expanduser()
+    out_path: Path = (
+        Path(output_path).expanduser() if output_path else in_path.with_suffix(".csv")
+    )
+
+    try:
+        with open(in_path, "r") as f:
+            data: dict[str, str] = json.load(f)
+    except FileNotFoundError as e:
+        raise FileNotFoundError(f"JSON File not found at location: '{in_path}'") from e
+    except OSError as e:
+        raise OSError(f"Failed to read flashcards from {in_path}: {e.strerror}") from e
+
+    df: pd.DataFrame = pd.DataFrame(data.get("flashcards", []))
+    df.to_csv(out_path, index=False)
+
+    return build_success_response(
+        {"message": f"Flashcards successfully converted to CSV: {out_path}"}
+    )
