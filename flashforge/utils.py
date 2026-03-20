@@ -7,6 +7,7 @@ from typing import Any
 from ollama import chat
 
 from .config import Config
+from .logging_config import _sanitize_text_for_logging
 from .models import GenerationResponse
 
 logger: logging.Logger = logging.getLogger(__name__)
@@ -66,24 +67,34 @@ def _validate_generation_params(text: str, num_cards: int) -> None:
         ValueError: If text is empty, exceeds TEXT_MAX_LEN, num_cards is
             invalid, or exceeds MAX_CARDS.
     """
-    logger.debug(f"Validating generation tool input args")
+    logger.debug(
+        "Entering _validate_generation_params: text_len=%d, num_cards=%d",
+        len(text),
+        num_cards,
+    )
 
     if not text:
-        logger.error(f"Invalid input argument 'text'")
-        raise ValueError(f"Input argument 'text' cannot be empty")
+        logger.error("Invalid input argument 'text': cannot be empty")
+        raise ValueError("Input argument 'text' cannot be empty")
     if len(text) > Config.TEXT_MAX_LEN:
-        logger.error(f"Input argument 'text' too long (length: {len(text)})")
-        raise ValueError(f"Input text too long ({len(text)})")
+        logger.error(
+            "Input argument 'text' too long: %d chars (max: %d)",
+            len(text),
+            Config.TEXT_MAX_LEN,
+        )
+        raise ValueError("Input text too long (%d)" % len(text))
     if num_cards <= 0:
-        logger.error(f"Input argument 'num_cards' was negative")
+        logger.error("Input argument 'num_cards' was negative or zero: %d", num_cards)
         raise ValueError("num_cards must be a positive integer")
     if num_cards > Config.MAX_CARDS:
         logger.error(
-            f"Cannot generate greater than {Config.MAX_CARDS} flashcards at once. Attempted {num_cards}"
+            "num_cards exceeds maximum: requested=%d, max=%d",
+            num_cards,
+            Config.MAX_CARDS,
         )
-        raise ValueError(f"num_cards must not exceed the maximum: {Config.MAX_CARDS}")
+        raise ValueError("num_cards must not exceed the maximum: %d" % Config.MAX_CARDS)
 
-    logger.debug("Generation tool input args validated")
+    logger.debug("Exiting _validate_generation_params: validation passed")
 
 
 def _generate_flashcards_from_messages(
@@ -100,7 +111,9 @@ def _generate_flashcards_from_messages(
     Raises:
         ValueError: If the LLM returns empty content or invalid JSON.
     """
-    logger.debug("Generating flashcards")
+    logger.debug(
+        "Entering _generate_flashcards_from_messages: %d messages", len(messages)
+    )
 
     resp = chat(
         model=Config.OLLAMA_MODEL,
@@ -110,14 +123,17 @@ def _generate_flashcards_from_messages(
     )
 
     if not resp.message.content:
-        logger.error("No content was generated")
+        logger.error("LLM returned empty content")
         raise ValueError("Did not generate any content")
 
-    logger.debug("Validating generation")
     generation: GenerationResponse = GenerationResponse.model_validate_json(
         resp.message.content or ""
     )
-    logger.debug("Generation validated")
+
+    logger.debug(
+        "Exiting _generate_flashcards_from_messages: generated %d flashcards",
+        len(generation.flashcards),
+    )
 
     return generation
 
@@ -138,10 +154,16 @@ def _validate_safe_path(base_dir: Path, user_path: str) -> Path:
     Raises:
         ValueError: If the resolved path escapes base_dir (path traversal attempt).
     """
+    logger.debug("Validating safe path: base_dir=%s, user_path=%s", base_dir, user_path)
+
     base = base_dir.expanduser().resolve()
     full_path = (base / user_path).resolve()
 
     if not str(full_path).startswith(str(base)):
-        raise ValueError(f"Path traversal attempted: {user_path}")
+        logger.error(
+            "Path traversal attempted: user_path=%s, resolved=%s", user_path, full_path
+        )
+        raise ValueError("Path traversal attempted: %s" % user_path)
 
+    logger.debug("Safe path validated: %s", full_path)
     return full_path

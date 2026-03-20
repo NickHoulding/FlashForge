@@ -1,12 +1,15 @@
 """Error-handling decorator for FlashForge MCP tool functions."""
 
 import functools
+import logging
 from typing import Any, Callable
 
 from pydantic import ValidationError
 from requests import HTTPError
 
 from .utils import build_error_response
+
+logger = logging.getLogger(__name__)
 
 
 def handle_tool_errors(
@@ -30,6 +33,12 @@ def handle_tool_errors(
             return func(*args, **kwargs)
 
         except ValidationError as e:
+            logger.error(
+                "Validation error in %s: %s",
+                func.__name__,
+                str(e),
+                exc_info=True,
+            )
             return build_error_response(
                 Exception("Flashcard generation failed"),
                 details={
@@ -44,6 +53,13 @@ def handle_tool_errors(
                 getattr(e.response, "status_code", None)
                 if hasattr(e, "response")
                 else None
+            )
+            logger.error(
+                "HTTP error in %s: status_code=%s, error=%s",
+                func.__name__,
+                status_code,
+                str(e),
+                exc_info=True,
             )
             error_details = {
                 "error_type": "http_error",
@@ -72,6 +88,12 @@ def handle_tool_errors(
                 Exception("VectorForge connection failed"), details=error_details
             )
         except FileNotFoundError as e:
+            logger.error(
+                "File not found error in %s: %s",
+                func.__name__,
+                str(e),
+                exc_info=True,
+            )
             return build_error_response(
                 Exception("File not found"),
                 details={
@@ -82,6 +104,12 @@ def handle_tool_errors(
                 },
             )
         except OSError as e:
+            logger.error(
+                "OS error in %s: %s",
+                func.__name__,
+                str(e),
+                exc_info=True,
+            )
             return build_error_response(
                 Exception("File operation failed"),
                 details={
@@ -92,6 +120,13 @@ def handle_tool_errors(
                 },
             )
         except Exception as e:
+            logger.error(
+                "Unexpected error in %s: %s (%s)",
+                func.__name__,
+                str(e),
+                type(e).__name__,
+                exc_info=True,
+            )
             return build_error_response(
                 Exception("Operation failed"),
                 details={
