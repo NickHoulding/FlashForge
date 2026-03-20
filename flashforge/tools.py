@@ -4,13 +4,11 @@ Contains generation tools and persistence tools for AI-powered flashcard creatio
 """
 
 import json
-import os
 from pathlib import Path
 from typing import Any
 
 import pandas as pd
 import requests
-from ollama import chat
 from requests import HTTPError
 
 from .config import Config
