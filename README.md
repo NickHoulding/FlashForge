@@ -1,4 +1,530 @@
-# FlashForge
+# FlashForge ![Python](https://img.shields.io/badge/python-3.11+-blue.svg) ![MCP](https://img.shields.io/badge/MCP-server-green.svg)
 
-## **Important**
-FlashForge is being rebuilt from the ground up as a focused Python MCP server. The original full-stack implementation was shelved in favor of a leaner architecture that integrates directly with AI tooling. Specifically, Claude and a VectorForge RAG backend, to automate the generation of study flashcards from source material. This version will do less, more reliably
+> AI-powered flashcard generation server using Model Context Protocol, Ollama, and VectorForge RAG
+
+## Table of Contents
+- [Problem Statement](#problem-statement)
+- [What is FlashForge?](#what-is-flashforge)
+- [Tech Stack](#tech-stack)
+- [Key Features](#key-features)
+- [Architecture](#architecture)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [How to Run](#how-to-run)
+  - [Environment Variables](#environment-variables)
+- [Usage](#usage)
+- [API Reference](#api-reference)
+- [Development](#development)
+
+---
+
+## Problem Statement
+
+Creating effective study flashcards is time-consuming and requires careful consideration of pedagogical principles. Students and learners often struggle to:
+- Extract the most important concepts from dense source material
+- Formulate clear, focused questions that test understanding rather than memorization
+- Generate enough flashcards to cover all key topics without overwhelming themselves
+- Leverage their existing knowledge bases and notes for flashcard creation
+
+FlashForge automates this process using AI, transforming raw text or topic queries into high-quality flashcards optimized for spaced repetition learning systems like Anki.
+
+---
+
+## What is FlashForge?
+
+FlashForge is a Python-based Model Context Protocol (MCP) server that generates study flashcards using AI. It integrates with Claude Desktop and other MCP clients to provide on-demand flashcard generation from either direct text input or topic-based research using a VectorForge RAG backend.
+
+The server exposes MCP tools that AI assistants can call to:
+- Generate flashcards from provided text passages
+- Research topics autonomously using a vector database and create flashcards from retrieved context
+- Save flashcards to persistent JSON storage
+- Export flashcards to CSV format for import into spaced repetition systems
+
+FlashForge is designed for students, educators, and lifelong learners who want to automate the creation of effective study materials while maintaining control over content quality through AI-powered generation.
+
+---
+
+## Tech Stack
+
+### **Backend**
+- **Python 3.11+**: Core runtime environment
+- **FastMCP**: Model Context Protocol server framework
+- **Ollama**: Local LLM inference for flashcard generation
+- **Requests**: HTTP client for VectorForge RAG integration
+- **Pydantic**: Data validation and schema definitions
+
+### **Data & Storage**
+- **Pandas**: CSV export functionality
+- **JSON**: Primary flashcard storage format
+- **VectorForge**: External RAG service for knowledge retrieval (optional)
+
+### **Development Tools**
+- **Black**: Code formatting
+- **isort**: Import organization
+- **mypy**: Static type checking with strict mode
+- **pre-commit**: Git hooks for code quality
+- **python-json-logger**: Structured logging
+
+### **AI Models**
+- Ollama-compatible models (default: qwen3.5:4b)
+- Configurable model selection via environment variables
+- Support for extended reasoning modes
+
+---
+
+## Key Features
+
+### **Flashcard Generation**
+- **Text-based generation**: Create flashcards from any text passage
+- **Topic-based generation**: Research topics using RAG and generate contextually accurate flashcards
+- **Configurable constraints**: Control question/answer length, card count, and text limits
+- **Quality control**: Built-in validation to ensure flashcards meet pedagogical best practices
+
+### **Storage & Export**
+- **JSON persistence**: Save flashcards to structured JSON files
+- **CSV export**: Convert flashcards to CSV format for import into Anki and other systems
+
+### **Production-Ready Infrastructure**
+- **Structured logging**: JSON logs with rotation for production monitoring
+- **Configuration validation**: Comprehensive startup validation of all settings
+- **Error handling**: Detailed error messages and logging for troubleshooting
+- **Health checks**: Built-in health check endpoint for monitoring
+
+### **MCP Integration**
+- **Claude Desktop compatible**: Works seamlessly with Claude as an MCP server
+- **Tool-based interface**: Exposes flashcard generation and management as callable tools
+- **Configurable timeouts**: Adjustable timeouts for LLM and HTTP requests
+
+---
+
+## Architecture
+
+FlashForge follows a modular architecture designed for maintainability and extensibility:
+
+```
+flashforge/
+├── config.py           # Centralized configuration with environment variable support
+├── logging_config.py   # Production-grade structured logging setup
+├── instance.py         # MCP server instance initialization
+├── tools.py            # MCP tool implementations (generation, persistence)
+├── models.py           # Pydantic models for flashcards and responses
+├── prompts.py          # LLM prompt templates for generation
+├── utils.py            # Helper functions for validation and generation
+└── errors.py           # Error handling decorators and utilities
+```
+
+### Data Flow
+
+1. **Text-based generation**:
+   - User provides text and card count via MCP tool call
+   - Text is validated against configured constraints
+   - System prompt and user prompt are constructed
+   - Ollama generates flashcards using configured model
+   - Response is validated and returned to user
+
+2. **Topic-based generation (RAG)**:
+   - User provides topic name and card count
+   - VectorForge is queried for relevant context
+   - Retrieved documents are concatenated and truncated to context limit
+   - LLM generates flashcards based only on retrieved context
+   - Response is validated and returned to user
+
+3. **Persistence**:
+   - User calls save tool with flashcards and filename
+   - Path is validated to prevent directory traversal
+   - Flashcards are saved to JSON in configured output directory
+   - Optional CSV export available for Anki/other systems
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- **Python 3.11 or higher**: Required for type hints and performance features
+- **Ollama**: Local LLM server for flashcard generation
+  - Install from [ollama.ai](https://ollama.ai)
+  - Pull a model: `ollama pull qwen3.5:4b`
+- **VectorForge** (optional): Only required for topic-based generation
+  - See [VectorForge documentation](https://github.com/NickHoulding/vectorforge) for setup
+- **uv** (recommended): Fast Python package manager
+  - Install from [astral.sh/uv](https://astral.sh/uv)
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/NickHoulding/flashforge.git
+cd flashforge
+
+# Create output directory for flashcards
+mkdir -p output
+
+# Install dependencies using uv (recommended)
+uv sync
+
+# Or install with pip
+pip install -e .
+
+# Set up environment variables
+cp .env.example .env
+# Edit .env with your preferred settings
+```
+
+### How to Run
+
+**As an MCP server (recommended):**
+
+Add FlashForge to your Claude Desktop configuration:
+
+```json
+{
+  "mcpServers": {
+    "flashforge": {
+      "command": "uv",
+      "args": ["run", "flashforge"],
+      "cwd": "/absolute/path/to/flashforge"
+    }
+  }
+}
+```
+
+Restart Claude Desktop, and FlashForge tools will be available in your conversations.
+
+**As a standalone script:**
+
+```bash
+# Using uv
+uv run flashforge
+
+# Or directly
+python -m flashforge
+```
+
+The server runs on stdio transport and will wait for MCP tool calls.
+
+### Environment Variables
+
+FlashForge is highly configurable through environment variables. Copy `.env.example` to `.env` and customize:
+
+| Variable | Description | Default | Required |
+|----------|-------------|---------|----------|
+| **Ollama Configuration** |
+| `FLASHCARD_MODEL` | Ollama model name for generation | `qwen3.5:4b` | No |
+| `SHOULD_THINK` | Enable extended reasoning mode | `false` | No |
+| `OLLAMA_TIMEOUT` | Max seconds for Ollama API responses | `300` | No |
+| **VectorForge Configuration** |
+| `VECTORFORGE_BASE_URL` | Base URL for VectorForge service | `http://localhost:8000` | No |
+| `RAG_TOP_K` | Number of results to retrieve (1-50) | `5` | No |
+| `CONTEXT_MAX_LEN` | Max context length (1-50000) | `10000` | No |
+| `HTTP_TIMEOUT` | HTTP request timeout in seconds | `30` | No |
+| **Flashcard Constraints** |
+| `QUESTION_MAX_LEN` | Max question length (1-1000) | `200` | No |
+| `ANSWER_MAX_LEN` | Max answer length (1-2000) | `500` | No |
+| `MAX_CARDS` | Max cards per request (1-100) | `50` | No |
+| `TEXT_MAX_LEN` | Max input text length (1-100000) | `400` | No |
+| **Storage** |
+| `OUTPUT_DIR` | Directory for saved flashcards | `./output` | No |
+| `MAX_FILE_NAME_LEN` | Max filename length | `255` | No |
+| **Logging** |
+| `FF_LOG_LEVEL` | Log level (DEBUG/INFO/WARNING/ERROR) | `INFO` | No |
+| `FF_LOG_FILE` | Log file path | `.logs/flashforge.log` | No |
+| `FF_LOG_JSON_CONSOLE` | Enable JSON console logging | `false` | No |
+| `FF_LOG_MAX_TEXT_LEN` | Max text length in logs | `100` | No |
+| `FF_LOG_MAX_BYTES` | Max log file size before rotation | `10485760` | No |
+| `FF_LOG_BACKUP_COUNT` | Number of backup log files (0-100) | `5` | No |
+
+**Setup instructions:**
+
+```bash
+# Copy the example environment file
+cp .env.example .env
+
+# Edit with your preferred editor
+nano .env
+```
+
+See `.env.example` for detailed descriptions and value ranges for each variable.
+
+---
+
+## Usage
+
+FlashForge is designed to be used through an MCP client like Claude Desktop. Here are examples of typical interactions:
+
+### Basic Flashcard Generation
+
+```python
+# In Claude Desktop or any MCP client:
+# "Generate 5 flashcards from this text: [paste your study material]"
+
+# Behind the scenes, Claude calls:
+generate_flashcards(
+    text="Photosynthesis is the process by which plants convert light energy...",
+    num_cards=5
+)
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "flashcards": [
+      {
+        "question": "What is photosynthesis?",
+        "answer": "The process by which plants convert light energy into chemical energy"
+      },
+      {
+        "question": "What are the two main stages of photosynthesis?",
+        "answer": "Light-dependent reactions and the Calvin cycle"
+      }
+      // ... 3 more flashcards
+    ]
+  }
+}
+```
+
+### Topic-Based Generation with RAG
+
+```python
+# In Claude Desktop:
+# "Research mitochondria and create 10 flashcards"
+
+# Claude calls:
+generate_flashcards_from_topic(
+    topic="mitochondria",
+    num_cards=10
+)
+```
+
+This queries your VectorForge knowledge base, retrieves relevant context, and generates flashcards based only on the retrieved information.
+
+### Saving Flashcards
+
+```python
+# In Claude Desktop:
+# "Save these flashcards to biology_chapter_3.json"
+
+# Claude calls:
+save_flashcards(
+    flashcards={
+        "flashcards": [
+            {"question": "...", "answer": "..."},
+            {"question": "...", "answer": "..."}
+            # ... 8 more flashcards
+        ]
+    },
+    file_name="biology_chapter_3.json"
+)
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "message": "Flashcards successfully saved to: /path/to/output/biology_chapter_3.json"
+  }
+}
+```
+
+### Exporting to CSV
+
+```python
+# In Claude Desktop:
+# "Export biology_chapter_3.json to CSV for Anki import"
+
+# Claude calls:
+export_flashcards_csv(
+    input_path="output/biology_chapter_3.json",
+    output_path="output/biology_chapter_3.csv"
+)
+```
+
+The CSV file will have columns for `question` and `answer` that can be imported directly into Anki or other spaced repetition systems.
+
+### Health Check
+
+```python
+# Verify server is running:
+health_check()
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "status": "healthy"
+  }
+}
+```
+
+---
+
+## API Reference
+
+FlashForge exposes the following MCP tools:
+
+### `generate_flashcards(text: str, num_cards: int)`
+
+Generate flashcards from provided text using AI.
+
+**Parameters:**
+- `text` (str): Source material to extract flashcard Q&A pairs from
+- `num_cards` (int): Number of flashcards to generate (1 to MAX_CARDS)
+
+**Returns:**
+- `dict[str, Any]`: Success response containing list of flashcards with `question` and `answer` fields
+
+**Raises:**
+- `ValueError`: If text is empty, exceeds TEXT_MAX_LEN, num_cards is invalid, or generation produces invalid output
+
+**Example:**
+```python
+result = generate_flashcards(
+    text="The mitochondria is the powerhouse of the cell...",
+    num_cards=3
+)
+```
+
+---
+
+### `generate_flashcards_from_topic(topic: str, num_cards: int)`
+
+Generate flashcards by researching a topic using VectorForge RAG.
+
+**Parameters:**
+- `topic` (str): Subject or topic name to generate flashcards about
+- `num_cards` (int): Number of flashcards to generate (1 to MAX_CARDS)
+
+**Returns:**
+- `dict[str, Any]`: Success response containing generated flashcards
+
+**Raises:**
+- `ValueError`: If topic is empty, num_cards is invalid, or no context found
+- `HTTPError`: If VectorForge request fails
+- `ConnectionError`: If VectorForge service is unavailable
+- `Timeout`: If VectorForge request exceeds HTTP_TIMEOUT
+
+**Example:**
+```python
+result = generate_flashcards_from_topic(
+    topic="cellular respiration",
+    num_cards=10
+)
+```
+
+---
+
+### `save_flashcards(flashcards: dict[str, str], file_name: str)`
+
+Save flashcards to persistent JSON storage.
+
+**Parameters:**
+- `flashcards` (dict[str, str]): Dictionary mapping flashcard IDs to their data
+- `file_name` (str): Name of the output file (without directory path)
+
+**Returns:**
+- `dict[str, Any]`: Success response with confirmation message and save location
+
+**Raises:**
+- `ValueError`: If flashcards dict is empty, file_name is empty/invalid, or exceeds MAX_FILE_NAME_LEN
+- `OSError`: If file cannot be created or written
+
+**Example:**
+```python
+result = save_flashcards(
+    flashcards={"flashcards": [{"question": "...", "answer": "..."}]},
+    file_name="my_cards.json"
+)
+```
+
+---
+
+### `export_flashcards_csv(input_path: str, output_path: str | None = None)`
+
+Export flashcards from JSON to CSV format.
+
+**Parameters:**
+- `input_path` (str): Path to the input JSON file containing flashcards
+- `output_path` (str | None): Optional path for output CSV (defaults to input path with .csv extension)
+
+**Returns:**
+- `dict[str, Any]`: Success response with confirmation message
+
+**Raises:**
+- `FileNotFoundError`: If input_path does not exist
+- `OSError`: If input file cannot be read or output file cannot be written
+- `ValueError`: If JSON is invalid or missing required keys
+
+**Example:**
+```python
+result = export_flashcards_csv(
+    input_path="output/biology.json",
+    output_path="output/biology.csv"
+)
+```
+
+---
+
+### `health_check()`
+
+Verify the MCP server is operational.
+
+**Returns:**
+- `dict[str, Any]`: Success response with status "healthy"
+
+**Example:**
+```python
+result = health_check()
+# {"success": true, "data": {"status": "healthy"}}
+```
+
+---
+
+## Development
+
+### Code Quality
+
+FlashForge uses strict code quality tools:
+
+```bash
+# Format code
+black flashforge/
+isort flashforge/
+
+# Type checking
+mypy flashforge/
+
+# Pre-commit hooks (runs all checks)
+pre-commit run --all-files
+```
+
+### Project Structure
+
+- `flashforge/config.py`: Configuration management with environment variables
+- `flashforge/logging_config.py`: Production logging setup with rotation
+- `flashforge/tools.py`: MCP tool implementations
+- `flashforge/models.py`: Pydantic models for validation
+- `flashforge/prompts.py`: LLM prompt templates
+- `flashforge/utils.py`: Helper functions
+- `flashforge/errors.py`: Error handling utilities
+
+### Running Tests
+
+```bash
+# Run all tests (when test suite is added)
+pytest tests/
+
+# Run with coverage
+pytest --cov=flashforge tests/
+```
+
+---
+
+## License
+
+This project is currently unlicensed. Please contact the repository owner for licensing information.
