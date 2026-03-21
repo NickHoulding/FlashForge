@@ -152,8 +152,8 @@ def generate_flashcards_from_topic(topic: str, num_cards: int) -> dict[str, Any]
     rag_start = time.time()
     try:
         response = requests.post(
-            url="%s/collections/flashforge/search" % Config.VECTORFORGE_BASE_URL,
-            params={"query": topic, "top_k": Config.RAG_TOP_K},
+            url="%s/collections/vectorforge/search" % Config.VECTORFORGE_BASE_URL,
+            json={"query": topic, "top_k": Config.RAG_TOP_K},
             timeout=Config.HTTP_TIMEOUT,
         )
         response.raise_for_status()

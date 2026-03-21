@@ -18,7 +18,7 @@ class Config:
     # Ollama Connection
     # =============================================================================
 
-    OLLAMA_MODEL: str = os.environ.get("FLASHCARD_MODEL", "qwen3.5:4b")
+    OLLAMA_MODEL: str = os.environ.get("FLASHCARD_MODEL", "qwen3.5:9b")
     """Model name to use for flashcard generation. Override via FLASHCARD_MODEL env var."""
 
     _SHOULD_THINK_STR: str = os.environ.get("SHOULD_THINK", "False").lower()
@@ -33,7 +33,7 @@ class Config:
     # =============================================================================
 
     VECTORFORGE_BASE_URL: str = os.environ.get(
-        "VECTORFORGE_BASE_URL", "http://localhost:8000"
+        "VECTORFORGE_BASE_URL", "http://localhost:3001"
     )
     """Base URL for the VectorForge RAG service. Override via VECTORFORGE_BASE_URL env var."""
 
