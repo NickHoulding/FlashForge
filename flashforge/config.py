@@ -18,7 +18,7 @@ class Config:
     # Ollama Connection
     # =============================================================================
 
-    OLLAMA_MODEL: str = os.environ.get("FLASHCARD_MODEL", "qwen3.5:9b")
+    OLLAMA_MODEL: str = os.environ.get("FLASHCARD_MODEL", "llama3.1:8b")
     """Model name to use for flashcard generation. Override via FLASHCARD_MODEL env var."""
 
     _SHOULD_THINK_STR: str = os.environ.get("SHOULD_THINK", "False").lower()
