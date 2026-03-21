@@ -18,7 +18,7 @@ from .config import Config
 from .errors import handle_tool_errors
 from .instance import mcp
 from .logging_config import _sanitize_text_for_logging
-from .models import GenerationResponse
+from .models import Flashcard, GenerationResponse
 from .prompts import (
     SYSTEM_PROMPT,
     SYSTEM_PROMPT_RAG,
@@ -251,7 +251,7 @@ def generate_flashcards_from_topic(topic: str, num_cards: int) -> dict[str, Any]
 
 @mcp.tool(description="Save flashcards to persistent storage")
 @handle_tool_errors
-def save_flashcards(flashcards: dict[str, str], file_name: str) -> dict[str, Any]:
+def save_flashcards(flashcards: list[Flashcard], file_name: str) -> dict[str, Any]:
     """Save flashcards to a JSON file in the configured output directory.
 
     Args:
@@ -287,6 +287,9 @@ def save_flashcards(flashcards: dict[str, str], file_name: str) -> dict[str, Any
         )
         raise ValueError("file_name too long (%d)" % len(file_name))
 
+    if not file_name.endswith(".json"):
+        file_name = file_name + ".json"
+
     file_path: Path = _validate_safe_path(
         base_dir=Path(Config.OUTPUT_DIR), user_path=file_name
     )
@@ -295,7 +298,9 @@ def save_flashcards(flashcards: dict[str, str], file_name: str) -> dict[str, Any
 
     try:
         with open(file_path, "w") as f:
-            json.dump(flashcards, f, indent=2)
+            json.dump(
+                {"flashcards": [card.model_dump() for card in flashcards]}, f, indent=2
+            )
     except OSError as e:
         logger.error(
             "Failed to write flashcards to %s: %s", file_path, e.strerror, exc_info=True
