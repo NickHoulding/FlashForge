@@ -144,12 +144,9 @@ flashforge/
 
 - **Python 3.11 or higher**: Required for type hints and performance features
 - **Ollama**: Local LLM server for flashcard generation
-  - Install from [ollama.ai](https://ollama.ai)
   - Pull a model: `ollama pull llama3.1:8b`
-- **VectorForge** (optional): Only required for topic-based generation
-  - See [VectorForge documentation](https://github.com/NickHoulding/vectorforge) for setup
+- **VectorForge** (optional): Only required for topic-based generation (See [VectorForge documentation](https://github.com/NickHoulding/vectorforge) for setup)
 - **uv** (recommended): Fast Python package manager
-  - Install from [astral.sh/uv](https://astral.sh/uv)
 
 ### Installation
 
@@ -169,7 +166,8 @@ pip install -e .
 
 # Set up environment variables
 cp .env.example .env
-# Edit .env with your preferred settings
+
+# Then, edit .env with your preferred settings
 ```
 
 ### How to Run
@@ -199,7 +197,6 @@ Restart Claude Desktop, and FlashForge tools will be available in your conversat
 **As a standalone script:**
 
 ```bash
-# Using uv
 uv run flashforge
 ```
 
@@ -493,8 +490,8 @@ FlashForge uses strict code quality tools:
 
 ```bash
 # Format code
-black flashforge/
 isort flashforge/
+black flashforge/
 
 # Type checking
 mypy flashforge/
