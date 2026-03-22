@@ -59,7 +59,7 @@ class Config:
     MAX_CARDS: int = int(os.environ.get("MAX_CARDS", "50"))
     """Maximum number of flashcards that can be generated in one request. Override via MAX_CARDS env var."""
 
-    TEXT_MAX_LEN: int = int(os.environ.get("TEXT_MAX_LEN", "400"))
+    TEXT_MAX_LEN: int = int(os.environ.get("TEXT_MAX_LEN", "5000"))
     """Maximum character length for input text source material. Override via TEXT_MAX_LEN env var."""
 
     # =============================================================================
