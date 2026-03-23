@@ -340,7 +340,7 @@ export_flashcards_csv(
 )
 ```
 
-The CSV file will have columns for `question` and `answer` that can be imported directly into Quizlet, Anki, or other spaced repetition systems.
+The CSV file will have columns for `question` and `answer` that can be imported directly into Quizlet, Knowt, Anki, or other spaced repetition systems.
 
 ### Health Check
 
