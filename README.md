@@ -168,9 +168,6 @@ mkdir -p output
 # Install dependencies using uv (recommended)
 uv sync
 
-# Or install with pip
-pip install -e .
-
 # Set up environment variables
 cp .env.example .env
 
