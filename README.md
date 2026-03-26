@@ -38,6 +38,7 @@ The server exposes MCP tools that AI assistants can call to:
 - Research topics autonomously using a vector database and create flashcards from retrieved context
 - Save flashcards to persistent JSON storage
 - Export flashcards to CSV format for import into spaced repetition systems
+- List, retrieve, and delete saved flashcard decks
 
 FlashForge is designed for students, educators, and lifelong learners who want to automate the creation of effective study materials while maintaining control over content quality through AI-powered generation.
 
@@ -82,6 +83,7 @@ FlashForge is designed for students, educators, and lifelong learners who want t
 ### **Storage & Export**
 - **JSON persistence**: Save flashcards to structured JSON files
 - **CSV export**: Convert flashcards to CSV format for import into Quizlet and other spaced repetition systems
+- **Deck management**: List all saved decks, retrieve flashcards from specific decks, and delete unwanted decks
 
 ### **Production-Ready Infrastructure**
 - **Structured logging**: JSON logs with rotation for production monitoring
@@ -110,7 +112,12 @@ flashforge/
 ├── logging_config.py    # Production-grade structured logging setup
 ├── models.py            # Pydantic models for flashcards and responses
 ├── prompts.py           # LLM prompt templates for generation
-├── tools.py             # MCP tool implementations (generation, persistence)
+├── tools/               # MCP tool implementations
+│   ├── __init__.py      # Tool registration
+│   ├── deck.py          # Deck management tools (list, get, delete)
+│   ├── generate.py      # Flashcard generation tools
+│   ├── health.py        # Health check endpoint
+│   └── persistence.py   # Save and export tools
 └── utils.py             # Helper functions for validation and generation
 ```
 
@@ -342,6 +349,79 @@ export_flashcards_csv(
 
 The CSV file will have columns for `question` and `answer` that can be imported directly into Quizlet, Knowt, Anki, or other spaced repetition systems.
 
+### Listing Available Decks
+
+```python
+# In Claude Desktop:
+# "What flashcard decks do I have saved?"
+
+# Claude calls:
+list_decks()
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "decks": [
+      "biology_chapter_3.json",
+      "chemistry_midterm.json",
+      "history_wwii.json"
+    ]
+  }
+}
+```
+
+### Retrieving Flashcards from a Deck
+
+```python
+# In Claude Desktop:
+# "Show me the flashcards from biology_chapter_3"
+
+# Claude calls:
+get_flashcards(deck_name="biology_chapter_3")
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "flashcards": [
+      {
+        "question": "What is photosynthesis?",
+        "answer": "The process by which plants convert light energy into chemical energy"
+      },
+      {
+        "question": "What are the two main stages of photosynthesis?",
+        "answer": "Light-dependent reactions and the Calvin cycle"
+      }
+    ]
+  }
+}
+```
+
+### Deleting a Deck
+
+```python
+# In Claude Desktop:
+# "Delete the old_notes.json deck"
+
+# Claude calls:
+delete_deck(deck_name="old_notes")
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "message": "Deck: 'old_notes.json' successfully deleted."
+  }
+}
+```
+
 ### Health Check
 
 ```python
@@ -467,6 +547,68 @@ result = export_flashcards_csv(
 
 ---
 
+### `list_decks()`
+
+List all available flashcard decks in the output directory.
+
+**Returns:**
+- `dict[str, Any]`: Success response containing a list of deck filenames
+
+**Raises:**
+- `OSError`: If the output directory cannot be read
+
+**Example:**
+```python
+result = list_decks()
+# {"success": true, "data": {"decks": ["biology.json", "chemistry.json"]}}
+```
+
+---
+
+### `get_flashcards(deck_name: str)`
+
+Retrieve all flashcards from a specific deck.
+
+**Parameters:**
+- `deck_name` (str): Name of the deck file (with or without .json extension)
+
+**Returns:**
+- `dict[str, Any]`: Success response containing flashcard data
+
+**Raises:**
+- `OSError`: If the deck file cannot be read
+- `ValueError`: If the deck path is invalid or unsafe
+
+**Example:**
+```python
+result = get_flashcards(deck_name="biology_chapter_3")
+# Returns all flashcards from biology_chapter_3.json
+```
+
+---
+
+### `delete_deck(deck_name: str)`
+
+Delete a flashcard deck from the output directory.
+
+**Parameters:**
+- `deck_name` (str): Name of the deck file to delete (with or without .json extension)
+
+**Returns:**
+- `dict[str, Any]`: Success response with confirmation message
+
+**Raises:**
+- `FileNotFoundError`: If the specified deck does not exist
+- `ValueError`: If the deck path is invalid or unsafe
+
+**Example:**
+```python
+result = delete_deck(deck_name="old_notes")
+# {"success": true, "data": {"message": "Deck: 'old_notes.json' successfully deleted."}}
+```
+
+---
+
 ### `health_check()`
 
 Verify the MCP server is operational.
@@ -510,7 +652,11 @@ pre-commit run --all-files
 - `flashforge/logging_config.py`: Production logging setup with rotation
 - `flashforge/models.py`: Pydantic models for validation
 - `flashforge/prompts.py`: LLM prompt templates
-- `flashforge/tools.py`: MCP tool implementations
+- `flashforge/tools/`: MCP tool implementations
+  - `deck.py`: Deck management tools
+  - `generate.py`: Flashcard generation tools
+  - `health.py`: Health check endpoint
+  - `persistence.py`: Save and export tools
 - `flashforge/utils.py`: Helper functions
 
 ### Running Tests
