@@ -29,7 +29,9 @@ def list_decks() -> dict[str, Any]:
 
     try:
         decks: list[Path] = list(Path(Config.OUTPUT_DIR).iterdir())
-        json_files: list[str] = [str(deck) for deck in decks if deck.suffix == ".json"]
+        json_files: list[str] = [
+            os.path.basename(deck) for deck in decks if deck.suffix == ".json"
+        ]
 
         logger.info("Listed %d deck(s) from %s", len(json_files), Config.OUTPUT_DIR)
         logger.debug("Exiting list_decks: found=%d decks", len(json_files))
