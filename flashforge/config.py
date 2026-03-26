@@ -66,7 +66,7 @@ class Config:
     # File Storage
     # =============================================================================
 
-    OUTPUT_DIR: str = os.environ.get("OUTPUT_DIR", "./output")
+    OUTPUT_DIR: str = os.environ.get("OUTPUT_DIR", "./.output")
     """Directory path for saving flashcard output files. Override via OUTPUT_DIR env var."""
 
     MAX_FILE_NAME_LEN: int = int(os.environ.get("MAX_FILE_NAME_LEN", "255"))

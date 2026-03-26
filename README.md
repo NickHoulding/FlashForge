@@ -310,17 +310,15 @@ This queries your VectorForge knowledge base, retrieves relevant context, and ge
 
 ```python
 # In Claude Desktop:
-# "Save these flashcards to biology_chapter_3.json"
+# "Save these flashcards as biology_chapter_3"
 
 # Claude calls:
 save_flashcards(
-    flashcards={
-        "flashcards": [
-            {"question": "...", "answer": "..."},
-            {"question": "...", "answer": "..."}
-        ]
-    },
-    file_name="biology_chapter_3"
+    flashcards=[
+        {"question": "What is photosynthesis?", "answer": "..."},
+        {"question": "What are chloroplasts?", "answer": "..."}
+    ],
+    deck_name="biology_chapter_3"
 )
 ```
 
@@ -338,13 +336,10 @@ save_flashcards(
 
 ```python
 # In Claude Desktop:
-# "Export biology_chapter_3.json to CSV for Quizlet import"
+# "Export biology_chapter_3 to CSV for Quizlet import"
 
 # Claude calls:
-export_flashcards_csv(
-    input_path="output/biology_chapter_3.json",
-    output_path="output/biology_chapter_3.csv"
-)
+export_flashcards_csv(deck_name="biology_chapter_3")
 ```
 
 The CSV file will have columns for `question` and `answer` that can be imported directly into Quizlet, Knowt, Anki, or other spaced repetition systems.
@@ -496,53 +491,53 @@ result = generate_flashcards_from_topic(
 
 ---
 
-### `save_flashcards(flashcards: dict[str, str], file_name: str)`
+### `save_flashcards(flashcards: list[Flashcard], deck_name: str)`
 
 Save flashcards to persistent JSON storage.
 
 **Parameters:**
-- `flashcards` (dict[str, str]): Dictionary mapping flashcard IDs to their data
-- `file_name` (str): Name of the output file (without directory path)
+- `flashcards` (list[Flashcard]): List of flashcard objects to save
+- `deck_name` (str): Name of the deck (without directory path or extension)
 
 **Returns:**
 - `dict[str, Any]`: Success response with confirmation message and save location
 
 **Raises:**
-- `ValueError`: If flashcards dict is empty, file_name is empty/invalid, or exceeds MAX_FILE_NAME_LEN
+- `ValueError`: If flashcards list is empty, deck_name is empty/invalid, or exceeds MAX_FILE_NAME_LEN
 - `OSError`: If file cannot be created or written
 
 **Example:**
 ```python
 result = save_flashcards(
-    flashcards={"flashcards": [{"question": "...", "answer": "..."}]},
-    file_name="my_cards.json"
+    flashcards=[
+        {"question": "What is photosynthesis?", "answer": "..."},
+        {"question": "What are chloroplasts?", "answer": "..."}
+    ],
+    deck_name="biology_chapter_3"
 )
 ```
 
 ---
 
-### `export_flashcards_csv(input_path: str, output_path: str | None = None)`
+### `export_flashcards_csv(deck_name: str)`
 
 Export flashcards from JSON to CSV format.
 
 **Parameters:**
-- `input_path` (str): Path to the input JSON file containing flashcards
-- `output_path` (str | None): Optional path for output CSV (defaults to input path with .csv extension)
+- `deck_name` (str): Name of the deck file (with or without .json extension)
 
 **Returns:**
 - `dict[str, Any]`: Success response with confirmation message
 
 **Raises:**
-- `FileNotFoundError`: If input_path does not exist
+- `FileNotFoundError`: If deck_name does not exist
 - `OSError`: If input file cannot be read or output file cannot be written
 - `ValueError`: If JSON is invalid or missing required keys
 
 **Example:**
 ```python
-result = export_flashcards_csv(
-    input_path="output/biology.json",
-    output_path="output/biology.csv"
-)
+result = export_flashcards_csv(deck_name="biology_chapter_3")
+# Creates biology_chapter_3.csv in the same directory
 ```
 
 ---

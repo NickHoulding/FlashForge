@@ -1,7 +1,7 @@
 [project]
 name = "flashforge"
 version = "0.1.0"
-description = "Add your description here"
+description = "AI-powered flashcard generation MCP server using Ollama and VectorForge RAG"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
