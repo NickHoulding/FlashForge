@@ -163,9 +163,9 @@ git clone https://github.com/NickHoulding/flashforge.git
 cd flashforge
 
 # Create output directory for flashcards
-mkdir -p output
+mkdir -p .output
 
-# Install dependencies using uv (recommended)
+# Install dependencies using uv
 uv sync
 
 # Set up environment variables
