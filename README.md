@@ -199,7 +199,7 @@ Add FlashForge to your Claude Desktop configuration:
 }
 ```
 
-Restart Claude Desktop, and FlashForge tools will be available in your conversations.
+Replace `/absolute/path/to/flashforge` with the absolute file path to the FlashForge root directory on your system. Restart Claude Desktop, and FlashForge tools will be available to use in your conversations.
 
 **As a standalone script:**
 
@@ -653,16 +653,6 @@ pre-commit run --all-files
   - `health.py`: Health check endpoint
   - `persistence.py`: Save and export tools
 - `flashforge/utils.py`: Helper functions
-
-### Running Tests
-
-```bash
-# Run all tests (when test suite is added)
-pytest tests/
-
-# Run with coverage
-pytest --cov=flashforge tests/
-```
 
 ---
 
