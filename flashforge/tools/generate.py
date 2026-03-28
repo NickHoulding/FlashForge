@@ -93,10 +93,12 @@ def generate_flashcards(text: str, num_cards: int) -> dict[str, Any]:
     return build_success_response(result)
 
 
-@mcp.tool(description="Generate flashcards from a topic name using AI research")
+@mcp.tool(
+    description="Generate flashcards from a topic name using Retrieval-Augmented Generation and AI"
+)
 @handle_tool_errors
 def generate_flashcards_from_topic(topic: str, num_cards: int) -> dict[str, Any]:
-    """Generate flashcards by having the LLM research a topic autonomously.
+    """Generate flashcards by having the LLM research a topic with RAG.
 
     Args:
         topic: Subject or topic name to generate flashcards about.
